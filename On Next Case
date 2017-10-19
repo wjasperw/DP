@@ -1,0 +1,306 @@
+    ' FamA
+    CreateGridSummary(FamA, FamA_TB, {Very_familiar}, "Column")
+
+    ' FanChar
+    CreateGridSummary(FanChar, FanChar_TB, {Yes_very_much}, "Column")
+
+    ' MovAware
+    CreateGridSummary(MovAware, MovAware_TB, {Heard_of}, "Column")
+
+    ' MovInt
+    CreateGridSummary(MovInt, MovInt_TB, {Definitely_interested}, "Column")
+
+    ' StarFan
+    CreateGridSummary(StarFan, StarFan_TB, {One_of_my_favorites}, "Column")
+
+    ' ComicFreq
+    CreateGridSummary(ComicFreq, ComicFreq_TB, {Almost_all}, "Column")
+
+    ' Rate
+    CreateGridSummary(Rate, Rate_TB, {Excellent}, "Column")
+
+    ' RateA
+    CreateGridSummary(RateA, RateA_TB, {Excellent}, "Column")
+
+    ' FamA
+    CreateGridSummary(FamA, FamA_T2B, {Very_familiar,Somewhat_familiar}, "Column")
+
+    ' FanChar
+    CreateGridSummary(FanChar, FanChar_T2B, {Yes_very_much,Yes_somewhat}, "Column")
+
+    ' MovInt
+    CreateGridSummary(MovInt, MovInt_T2B, {Definitely_interested,Probably_interested}, "Column")
+
+    ' UrgPre
+    CreateGridSummary(UrgPre, UrgPre_T2B, {Opening_day,During_the_opening_weekend_but_not_opening_day}, "Column")
+
+    ' ComicFreq
+    CreateGridSummary(ComicFreq, ComicFreq_T2B, {Almost_all,A_lot}, "Column")
+
+    ' Seen
+    CreateGridSummary(Seen, Seen_T2B, {Seen_in_a_theater,Seen_but_not_in_a_theater}, "Column")
+
+    ' SeenM
+    CreateGridSummary(SeenM, SeenM_T2B, {Seen_in_theater,Seen_elsewhere_e_g_on_DVD_Blu_ray_streaming}, "Column")
+
+    ' SeenA
+    CreateGridSummary(SeenA, SeenA_T2B, {Seen_in_a_theater,Seen_but_not_in_a_theater}, "Column")
+
+    ' Rate
+    CreateGridSummary(Rate, Rate_T2B, {Excellent,Very_Good}, "Column")
+
+    ' RateA
+    CreateGridSummary(RateA, RateA_T2B, {Excellent,Very_Good}, "Column")
+
+    ' FamA
+    CreateGridSummary(FamA, FamA_B2B, {Not_at_all_familiar,I_don_t_know_this_character}, "Column")
+
+    ' MovGenre
+    CreateGridSummary(MovGenre, MovGenre_TB, {One_of_my_favorite_types_to_see_in_theaters}, "Column")
+
+    ' MovGenre
+    CreateGridSummary(MovGenre, MovGenre_2B, {Only_see_in_theaters_if_I_hear_it_s_good_or_it_has_stars_I_like}, "Column")
+
+    ' MovGenre
+    CreateGridSummary(MovGenre, MovGenre_3B, {Usually_not_interested_in_seeing_in_theaters}, "Column")
+
+    ' MovGenre
+    CreateGridSummary(MovGenre, MovGenre_4B, {I_don_t_see_this_type_of_movie_in_theaters}, "Column")
+
+    ' Read
+    CreateGridSummary(Read, Read_TB, {Regularly}, "Column")
+
+    ' Read
+    CreateGridSummary(Read, Read_2B, {Sometimes}, "Column")
+
+    ' Read
+    CreateGridSummary(Read, Read_3B, {Rarely}, "Column")
+
+    ' Read
+    CreateGridSummary(Read, Read_4B, {Never}, "Column")
+
+    ' UrgPre
+    CreateGridSummary(UrgPre, UrgPre_TB, {Opening_day}, "Column")
+
+    ' UrgPre
+    CreateGridSummary(UrgPre, UrgPre_2B, {During_the_opening_weekend_but_not_opening_day}, "Column")
+
+    ' UrgPre
+    CreateGridSummary(UrgPre, UrgPre_3B, {The_week_following_opening_weekend_but_not_opening_weekend}, "Column")
+
+    ' UrgPre
+    CreateGridSummary(UrgPre, UrgPre_4B, {After_the_opening_week}, "Column")
+
+    ' UrgPre
+    CreateGridSummary(UrgPre, UrgPre_5B, {Would_wait_until_I_could_watch_it_at_home}, "Column")
+
+    ' UrgPre
+    CreateGridSummary(UrgPre, UrgPre_6B, {Wouldn_t_see_it_in_a_theater_or_at_home}, "Column")
+
+    ' SeqA
+    CreateGridSummary(SeqA, SeqA_TB, {Must_have_this}, "Column")
+
+    ' SeqA
+    CreateGridSummary(SeqA, SeqA_2B, {Nice_to_have_this_but_not_a_must_have}, "Column")
+
+    ' SeqA
+    CreateGridSummary(SeqA, SeqA_3B, {Shouldn_t_have_this}, "Column")
+
+    ' SeqA
+    CreateGridSummary(SeqA, SeqA_4B, {No_opinion}, "Column")
+
+    ' Touchpoint
+    CreateGridSummary(Touchpoint, Touchpoint_TB, {Read_a_comic_book}, "Column")
+
+    ' Touchpoint
+    CreateGridSummary(Touchpoint, Touchpoint_2B, {Played_a_video_game}, "Column")
+
+    ' Touchpoint
+    CreateGridSummary(Touchpoint, Touchpoint_3B, {Saw_a_movie_in_the_theater}, "Column")
+
+    ' Touchpoint
+    CreateGridSummary(Touchpoint, Touchpoint_4B, {Bought_a_movie_on_DVD_Blu_ray_or_a_digital_copy}, "Column")
+
+    ' Touchpoint
+    CreateGridSummary(Touchpoint, Touchpoint_5B, {Saw_a_movie_but_didn_t_buy_it_or_pay_to_see_it_in_the_theater}, "Column")
+
+    ' Touchpoint
+    CreateGridSummary(Touchpoint, Touchpoint_6B, {Saw_a_TV_series_animated_or_live_action}, "Column")
+
+    ' Touchpoint
+    CreateGridSummary(Touchpoint, Touchpoint_7B, {Bought_merchandise_toys_clothing_etc}, "Column")
+
+    ' Touchpoint
+    CreateGridSummary(Touchpoint, Touchpoint_8B, {Posted_on_social_media_a_blog_or_another_platform}, "Column")
+
+    ' Touchpoint
+    CreateGridSummary(Touchpoint, Touchpoint_9B, {None_of_the_above}, "Column")
+
+    ' Seen
+    CreateGridSummary(Seen, Seen_TB, {Seen_in_a_theater}, "Column")
+
+    ' Seen
+    CreateGridSummary(Seen, Seen_2B, {Seen_but_not_in_a_theater}, "Column")
+
+    ' Seen
+    CreateGridSummary(Seen, Seen_3B, {Have_heard_of_but_not_seen}, "Column")
+
+    ' Seen
+    CreateGridSummary(Seen, Seen_4B, {Have_never_heard_of}, "Column")
+
+    ' SeenM
+    CreateGridSummary(SeenM, SeenM_TB, {Seen_in_theater}, "Column")
+
+    ' SeenM
+    CreateGridSummary(SeenM, SeenM_2B, {Seen_elsewhere_e_g_on_DVD_Blu_ray_streaming}, "Column")
+
+    ' SeenM
+    CreateGridSummary(SeenM, SeenM_3B, {Have_heard_of_but_not_seen}, "Column")
+
+    ' SeenM
+    CreateGridSummary(SeenM, SeenM_4B, {Have_never_heard_of}, "Column")
+
+    ' SeenM
+    CreateGridSummary(SeenM, SeenM_5B, {Seen_anywhere}, "Column")
+
+    ' SeenA
+    CreateGridSummary(SeenA, SeenA_TB, {Seen_in_a_theater}, "Column")
+
+    ' SeenA
+    CreateGridSummary(SeenA, SeenA_2B, {Seen_but_not_in_a_theater}, "Column")
+
+    ' SeenA
+    CreateGridSummary(SeenA, SeenA_3B, {Have_heard_of_but_not_seen}, "Column")
+
+    ' SeenA
+    CreateGridSummary(SeenA, SeenA_4B, {Have_never_heard_of}, "Column")
+
+    ' SeenA
+    CreateGridSummary(SeenA, SeenA_5B, {SeenA99_4}, "Column")
+
+    ' MultiSeen
+    CreateGridSummary(MultiSeen, MultiSeen_TB, {Once}, "Column")
+
+    ' MultiSeen
+    CreateGridSummary(MultiSeen, MultiSeen_2B, {Twice}, "Column")
+
+    ' MultiSeen
+    CreateGridSummary(MultiSeen, MultiSeen_3B, {More_than_twice}, "Column")
+
+    ' MultiSeen
+    CreateGridSummary(MultiSeen, MultiSeen_4B, {Don_t_remember}, "Column")
+
+    ' DeadTimeB
+    CreateGridSummary(DeadTimeB, DeadTimeB_TB, {Once}, "Column")
+
+    ' DeadTimeB
+    CreateGridSummary(DeadTimeB, DeadTimeB_2B, {Twice}, "Column")
+
+    ' DeadTimeB
+    CreateGridSummary(DeadTimeB, DeadTimeB_3B, {Three_times}, "Column")
+
+    ' DeadTimeB
+    CreateGridSummary(DeadTimeB, DeadTimeB_4B, {Four_or_more_times}, "Column")
+
+    ' DeadTimeB
+    CreateGridSummary(DeadTimeB, DeadTimeB_5B, {You_don_t_remember}, "Column")
+
+    ' DeadTimeB_M
+    CreateGridSummary(DeadTimeB_M, DeadTimeB_M_TB, {Once}, "Column")
+
+    ' DeadTimeB_M
+    CreateGridSummary(DeadTimeB_M, DeadTimeB_M_2B, {Twice}, "Column")
+
+    ' DeadTimeB_M
+    CreateGridSummary(DeadTimeB_M, DeadTimeB_M_3B, {Three_times}, "Column")
+
+    ' DeadTimeB_M
+    CreateGridSummary(DeadTimeB_M, DeadTimeB_M_4B, {Four_or_more_times}, "Column")
+
+    ' DeadTimeB_M
+    CreateGridSummary(DeadTimeB_M, DeadTimeB_M_5B, {Don_t_remember}, "Column")
+
+    ' TouchPoint
+    CreateGridSummary(TouchPoint, TouchPoint_SMB, {Saw_a_movie_in_the_theater,Saw_a_movie_but_didn_t_buy_it_or_pay_to_see_it_in_the_theater}, "Column")
+
+    ' FirstPoint
+    CreateGridSummary(FirstPoint, FirstPoint_SMB, {Saw_a_movie_in_the_theater,Saw_a_movie_but_didn_t_buy_it_or_pay_to_see_it_in_the_theater}, "Column")
+
+    ' RateB
+    CreateGridSummary(RateB, RateB_TB, {Excellent}, "Column")
+
+    ' RateB
+    CreateGridSummary(RateB, RateB_T2B, {Excellent,Very_Good}, "Column")
+
+    ' CharSeeA
+    CreateGridSummary(CharSeeA, CharSeeA_TB, {Very_excited}, "Column")
+
+    ' WhyInt
+    CreateGridSummary(WhyInt, WhyInt_TB, {Strongly_agree}, "Column")
+
+    ' WhyNoInt
+    CreateGridSummary(WhyNoInt, WhyNoInt_TB, {Strongly_agree}, "Column")
+
+    ' HumWant
+    CreateGridSummary(HumWant, HumWant_TB, {Very_much}, "Column")
+
+    ' ElemEnjoy
+    CreateGridSummary(ElemEnjoy, ElemEnjoy_TB, {Very_much}, "Column")
+
+    ' CharSeeA
+    CreateGridSummary(CharSeeA, CharSeeA_T2B, {Very_excited,Somewhat_excited}, "Column")
+
+    ' WhyInt
+    CreateGridSummary(WhyInt, WhyInt_T2B, {Strongly_agree,Somewhat_agree}, "Column")
+
+    ' WhyNoInt
+    CreateGridSummary(WhyNoInt, WhyNoInt_T2B, {Strongly_agree,Somewhat_agree}, "Column")
+
+    ' HumWant
+    CreateGridSummary(HumWant, HumWant_T2B, {Very_much,Somewhat}, "Column")
+
+    ' ElemEnjoy
+    CreateGridSummary(ElemEnjoy, ElemEnjoy_T2B, {Very_much,Somewhat}, "Column")
+
+    ' HumWant
+    CreateGridSummary(HumWant, HumWant_B2B, {Not_very_much,Not_at_all}, "Column")
+
+    ' ElemEnjoy
+    CreateGridSummary(ElemEnjoy, ElemEnjoy_B2B, {Not_at_all,I_don_t_remember_this}, "Column")
+
+    ' StoryLeft
+    CreateGridSummary(StoryLeft, StoryLeft_TB, {Story_has_more_left_to_explore}, "Column")
+
+    ' StoryLeft
+    CreateGridSummary(StoryLeft, StoryLeft_2B, {Story_has_nothing_more_to_tell}, "Column")
+
+    ' Seen_R
+    CreateGridSummary(Seen_R, Seen_R_TB, {Seen_in_a_theater}, "Column")
+
+    ' Seen_R
+    CreateGridSummary(Seen_R, Seen_R_2B, {Seen_elsewhere_e_g_on_DVD_Blu_ray_streaming}, "Column")
+
+    ' Seen_R
+    CreateGridSummary(Seen_R, Seen_R_3B, {Have_heard_of_but_not_seen}, "Column")
+
+    ' Seen_R
+    CreateGridSummary(Seen_R, Seen_R_4B, {Have_never_heard_of}, "Column")
+
+    ' Seen_R
+    CreateGridSummary(Seen_R, Seen_R_T2B, {Seen_in_a_theater,Seen_elsewhere_e_g_on_DVD_Blu_ray_streaming}, "Column")
+
+    ' Seen_RA
+    CreateGridSummary(Seen_RA, Seen_RA_TB, {Seen_in_theater}, "Column")
+
+    ' Seen_RA
+    CreateGridSummary(Seen_RA, Seen_RA_2B, {Seen_elsewhere_e_g_on_DVD_Blu_ray_streaming}, "Column")
+
+    ' Seen_RA
+    CreateGridSummary(Seen_RA, Seen_RA_3B, {Have_heard_of_but_not_seen}, "Column")
+
+    ' Seen_RA
+    CreateGridSummary(Seen_RA, Seen_RA_T2B, {Seen_in_theater,Seen_elsewhere_e_g_on_DVD_Blu_ray_streaming}, "Column")
+
+    ' ElemEnjoy
+    CreateGridSummary(ElemEnjoy, ElemEnjoy_NB, {Not_very_much,Not_at_all}, "Column")
+
