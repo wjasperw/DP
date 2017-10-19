@@ -1,0 +1,1203 @@
+Dim Project, TableDoc, Sample[], Cntry[], CStart, CEnd, SampStart, SampEnd, C, S, AxisTop, AxisSide, DDF_FILE, MDD_FILE, EXPORT_FILE, BoxListNum, Screener, Client, TypeofProject, NonRejecters
+
+'*******************************************'
+'	Define Path	& Project					'
+'*******************************************'
+#define myPath "K:\Deadpool 2\Brand and Sequel Study\Wave 1\"
+Project  = "Deadpool"
+TypeofProject = "Brand and Sequel"
+
+'*******************************************'
+'	Define Samples & Countries				'
+'*******************************************'
+
+Sample[1] = "General"
+Sample[2] = "Parent"
+Sample[3] = "Kids"
+
+Cntry[0] = "All Countries"
+Cntry[1] = "US"
+Cntry[2] = "UK"
+Cntry[3] = "FR"
+Cntry[4] = "DE"
+Cntry[5] = "ES"
+Cntry[6] = "MX"
+Cntry[7] = "BR"
+Cntry[8] = "RU"
+Cntry[9] = "CN"
+Cntry[10] = "JP"
+Cntry[11] = "KR"
+Cntry[12] = "HK"
+
+Screener = 0
+NonRejecters = 0
+Client = 0
+
+'*******************************************'
+'	Country Numbers to Run					'
+'*******************************************'
+CStart   = 1
+CEnd	 = 1
+
+For C = CStart to CEnd
+
+	'*******************************************'
+	'	Sample Numbers to Run					'
+	'*******************************************'
+
+	SampStart   = 1
+	SampEnd	    = 1
+	
+	For S = SampStart to SampEnd
+	
+		'*******************************************'
+		'	Read in Data							'
+		'*******************************************'
+		
+		Set TableDoc = CreateObject("TOM.Document")
+		
+		if Screener = 0 then DDF_FILE = myPath + "Tabs\Tab Prep\Data1 " + Cntry[1] + ".ddf"
+		if Screener = 0 then MDD_FILE = myPath + "Tabs\Tab Prep\Data1 " + Cntry[1] + ".mdd"
+		
+		if Screener = 1 and NonRejecters = 0 then DDF_FILE = myPath + "Tabs\Tab Prep\Data1 " + Cntry[1] + " Screener.ddf"
+		if Screener = 1 and NonRejecters = 0 then MDD_FILE = myPath + "Tabs\Tab Prep\Data1 " + Cntry[1] + " Screener.mdd"
+		
+		if Screener = 1 and NonRejecters = 1 then DDF_FILE = myPath + "Tabs\Tab Prep\Data1 " + Cntry[1] + " Screener_Nonrejecters.ddf"
+		if Screener = 1 and NonRejecters = 1 then MDD_FILE = myPath + "Tabs\Tab Prep\Data1 " + Cntry[1] + " Screener_Nonrejecters.mdd"
+		
+		if S = 3 then DDF_FILE = myPath + "Tabs\Tab Prep\Data1K " + Cntry[1] + ".ddf"
+		if S = 3 then MDD_FILE = myPath + "Tabs\Tab Prep\Data1K " + Cntry[1] + ".mdd"	
+		
+		TableDoc.DataSet.Load(MDD_FILE, , DDF_FILE, "mrDataFileDsc")	
+		
+		'*******************************************'
+		'	Global Table Properties					'
+		'*******************************************'
+		
+		TableDoc.Default.CellItems.Clear()
+		TableDoc.Default.CellItems.AddNew(&H0001,2)
+		TableDoc.Default.Properties["AutoUnweightedBases"] = True
+		TableDoc.Default.Annotations.ClearAll()
+		
+		If Screener = 0 then
+		TableDoc.Global.Clear()
+		With TableDoc.Global      
+		   .Annotations[0].Specification = Project + " " + TypeofProject + " Study (" + Sample[S] + " Sample) - " + Cntry[C]
+		   .Annotations[1].Specification = "{TableDescription \n}"
+		   .Annotations[3].Specification = "Table: {TableNumber}"
+		   .Annotations[5].Specification = "{WeightVariable \n\p}{Filters \n\p}{SortColumn \n\p}{Statistics }"
+		End With
+		End If		
+		
+		If Screener = 1 and NonRejecters = 0 then
+		TableDoc.Global.Clear()
+		With TableDoc.Global      
+		   .Annotations[0].Specification = Project + " " + TypeofProject + " Study (" + Sample[S] + " Moviegoers Screener Sample) - " + Cntry[C]
+		   .Annotations[1].Specification = "{TableDescription \n}"
+		   .Annotations[3].Specification = "Table: {TableNumber}"
+		   .Annotations[5].Specification = "{WeightVariable \n\p}{Filters \n\p}{SortColumn \n\p}{Statistics }"
+		End With
+		End If
+		
+		If Screener = 1 and NonRejecters = 1 then
+		TableDoc.Global.Clear()
+		With TableDoc.Global      
+		   .Annotations[0].Specification = Project + " " + TypeofProject + " Study (" + Sample[S] + " Superhero NonRejecters Screener Sample) - " + Cntry[C]
+		   .Annotations[1].Specification = "{TableDescription \n}"
+		   .Annotations[3].Specification = "Table: {TableNumber}"
+		   .Annotations[5].Specification = "{WeightVariable \n\p}{Filters \n\p}{SortColumn \n\p}{Statistics }"
+		End With
+		End If
+		
+		'----------------------------
+		'Global Filters				'
+		'----------------------------
+		
+'		If Sample[S] = "General" then TableDoc.Global.Filters.AddNew("Sample", "Sample_Type.ContainsAny({General})")
+'		If Sample[S] = "Parent" then TableDoc.Global.Filters.AddNew("Sample", "Sample_Type.ContainsAny({Parent})")
+
+'		if Cntry[C] = "US" then TableDoc.Global.Filters.AddNew("Terr", "TerrCheck.ContainsAny({United_States})")
+'		if Cntry[C] = "UK" then TableDoc.Global.Filters.AddNew("Terr", "TerrCheck.ContainsAny({United_Kingdom})")
+'		if Cntry[C] = "FR" then TableDoc.Global.Filters.AddNew("Terr", "TerrCheck.ContainsAny({France})")
+'		if Cntry[C] = "DE" then TableDoc.Global.Filters.AddNew("Terr", "TerrCheck.ContainsAny({Germany})")
+'		if Cntry[C] = "ES" then TableDoc.Global.Filters.AddNew("Terr", "TerrCheck.ContainsAny({Spain})")
+'		if Cntry[C] = "MX" then TableDoc.Global.Filters.AddNew("Terr", "TerrCheck.ContainsAny({Mexico})")
+'		if Cntry[C] = "BR" then TableDoc.Global.Filters.AddNew("Terr", "TerrCheck.ContainsAny({Brazil})")
+'		if Cntry[C] = "RU" then TableDoc.Global.Filters.AddNew("Terr", "TerrCheck.ContainsAny({Russia})")
+'		if Cntry[C] = "CN" then TableDoc.Global.Filters.AddNew("Terr", "TerrCheck.ContainsAny({China})")
+'		if Cntry[C] = "JP" then TableDoc.Global.Filters.AddNew("Terr", "TerrCheck.ContainsAny({Japan})")
+'		if Cntry[C] = "KR" then TableDoc.Global.Filters.AddNew("Terr", "TerrCheck.ContainsAny({South_Korea})")
+'		if Cntry[C] = "HK" then TableDoc.Global.Filters.AddNew("Terr", "TerrCheck.ContainsAny({Hong_Kong})")		
+		
+		'*******************************************'
+		'	Create Banner(s)						'
+		'*******************************************'
+		
+		Set AxisTop = TableDoc.Axes.AddNew("TopBanner") 
+		Set AxisSide = TableDoc.Axes.AddNew("SideBanner")
+		
+		'---------------
+		'Top Banner
+		'---------------
+		
+'		if C = 0 then 
+'			if S = 1 then AxisTop.Specification = "Overall + Country + GenderG + Country as C2 > GenderG + Age5 + Age5gen +  Quads + Age2 + Country as C3 > Age2 + IntEp8 + SWFan + SegA + Seg2 + Seg1 + CompFan + TFAView + OldSW + RateBan + ROInt + Action + Adventure + SciFi + Super + Hollywood"
+'			if S = 2 then AxisTop.Specification = "Overall + Country + GenderP + Country as C2 > GenderP + GenderK + AgeK + AgeGenK + pIntEp8 + SWFan + SegA + Seg2 + Seg1 + CompFan + TFAView + OldSW + pOldSW + RateBan + ROInt + Action + Adventure + SciFi + Super + Hollywood"
+'		end if
+		
+		if C = 1 then 
+			if S = 1 and Screener = 1 then AxisTop.Specification = "Overall + GenderG + Age2 + Quads + QuadsB + Age4 + Age4Gen + Superhero 'Superhero/Comic book Movie Fanship' + ComicRead + AwareDP + FanDP + HeardOf + Pre + ViewA + ViewC + ViewD + Rateban + OwnDP + Race"
+			if S = 1 and Screener = 0 then AxisTop.Specification = "Overall + GenderG + Age2 + Quads + QuadsB + Age4 + Age4Gen + Superhero 'Superhero/Comic book Movie Fanship' + ComicRead + AwareDP + FanDP + HeardOf + Pre + ViewAB + ViewAM + ViewC + ViewCM + ViewD 'Deadpool Seen' + ViewDM 'Deadpool Seen (Merged)' + Rateban + OwnDP + OwnDPM + ParentA + Race"
+'			if S = 2 then AxisTop.Specification = "Overall + GenderG + Age3 + Age2 + AgeGenBy3 + Quads + User1 + Pre1 + Post1 + Race2 + Segment + Conc + HorFan + SciFan + ThrillFan + SusFan + ExclView + OrigView + YTRedSub + RocChanView + AweChanView + RocShowView + AweShowView"
+		end if
+'		
+'		if C > 1 then 
+'			if S = 1 then AxisTop.Specification = "Overall + GenderG + Age5 + Age5gen +  Quads + Age2 + IntEp8 + SWFan + SegA + Seg2 + Seg1 + CompFan + TFAView + OldSW + RateBan + ROInt + Action + Adventure + SciFi + Super + Hollywood"
+'			if S = 2 then AxisTop.Specification = "Overall + GenderP + GenderK + AgeK + AgeGenK + pIntEp8 + SWFan + SegA + Seg2 + Seg1 + CompFan + TFAView + OldSW + pOldSW + RateBan + ROInt + Action + Adventure + SciFi + Super + Hollywood"
+'		end if
+		
+		'-----------------------------------------
+		'Side Banner for Banner X Banner (Table1)
+		'-----------------------------------------
+'		if C = 0 then 
+'			if S = 1 then AxisSide.Specification = "Overall2 + Country + GenderG + Age5 + Age5gen +  Quads + Age2 + IntEp8 + SWFan + SegA + Seg2 + Seg1 + CompFan + TFAView + OldSW + RateBan + ROInt + Action + Adventure + SciFi + Super + Hollywood"
+'			if S = 2 then AxisSide.Specification = "Overall2 + Country + GenderP + GenderK + AgeK + AgeGenK + pIntEp8 + SWFan + SegA + Seg2 + Seg1 + CompFan + TFAView + OldSW + pOldSW + RateBan + ROInt + Action + Adventure + SciFi + Super + Hollywood"
+'		end if
+		
+		If C > 0 then 
+			AxisSide.Specification = AxisTop.Specification
+			AxisSide.SubAxes.Remove(0)			
+			AxisSide.Specification = "Overall2 +" + AxisSide.Specification
+		end if
+		
+		
+		
+		'----------------------------
+		'Create Tables				'
+		'----------------------------
+		
+		
+		Dim i, Ttl[], Amg[], QRE[], Banner, var[], ListNum, SortCol, we, OEList[], WgtVar, GridBanner, Brands[]
+	
+		SortCol = "first"
+		WgtVar = "Weight"	
+		
+		With TableDoc
+		
+			Banner = "Axis(TopBanner)"
+			
+			Ttl[1] = "Banner"
+			QRE[1] = "Banner"
+			Amg[1] = "All"
+			Var[1] = "Axis(SideBanner)"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+				
+			QRE[1] = "Avid1, Avid2"
+			Ttl[1] = "Movie Avidity "
+			Amg[1] = "All"
+			Var[1] = RemCom(QRE[1])
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			BoxListNum = 4
+			ListNum = 5
+			
+			QRE[1] = "MovGenre"
+			Ttl[1] = "Movie Genre"
+			Amg[1] = "All"
+			Var[1] = ListVarsOv(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (By Box)"
+			Var[1] = ListVarsByBoxOv(QRE[1], BoxListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+				
+			BoxListNum = 4
+			ListNum = 5
+			
+			QRE[1] = "Read"
+			Ttl[1] = "Read Publications"
+			Amg[1] = "All"
+			Var[1] = ListVarsOv(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (By Box)"
+			Var[1] = ListVarsByBoxOv(QRE[1], BoxListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+				
+'			ListNum = ?
+				
+			QRE[1] = "AwareA"
+			Ttl[1] = "Character Awareness"
+			Amg[1] = "All"
+			Var[1] = QRE[1]+ "{Base('Overall=1'),..}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			
+			QRE[1] = "Recog"
+			Ttl[1] = "Which Characters Recognize"
+			Amg[1] = "Not Aware of Each Character"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "CharAware"
+			Ttl[1] = "Character Awareness"
+			Amg[1] = "All"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			ListNum = 7
+				
+			QRE[1] = "Fam"
+			Ttl[1] = "Character Familiarity"
+			Amg[1] = "Aware of Each Character"
+			Var[1] = ListVars(QRE[1] + "A", ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box, Bottom 2 Box)"
+			Var[1] = QRE[1] + "A_TB" + " + " + QRE[1] + "A_T2B" + " + " + QRE[1] + "A_B2B"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+				
+			ListNum = 7
+			
+			QRE[1] = "FanChar"
+			Ttl[1] = "Character Fanship"
+			Amg[1] = "Aware of Character"
+			Var[1] = ListVars(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box)"
+			Var[1] = QRE[1] + "_TB" + " + " + QRE[1] + "_T2B"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+'				Rebased Tabs
+			Ttl[1] = "Character Fanship (Rebased)"
+			Amg[1] = "All"
+			Var[1] = ListVarsOv(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			Ttl[2] = "Character Fanship (Rebased Top Box, Top 2 Box)"
+			Var[1] = QRE[1] + "_TB{Base('Overall=1'),..}" + " + " + QRE[1] + "_T2B{Base('Overall=1'),..}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+				
+			ListNum = 9
+			
+			QRE[1] = "MovAware"
+			Ttl[1] = "Movie Awareness (And Top Box)"
+			Amg[1] = "All"
+			Var[1] = ListVarsOv(QRE[1], ListNum) + " + " + QRE[1] + "_TB{base('Overall=1'), unweightedbase('Overall=1'), ..}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+
+			ListNum = 9
+			
+			QRE[1] = "MovInt"
+			Ttl[1] = "Interest in Movie Upon Release"
+			Amg[1] = "All"
+			Var[1] = ListVarsOv(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box)"
+			Var[1] = QRE[1] + "_TB" + "{Base('Overall=1'),..} + " + QRE[1] + "_T2B"+ "{Base('Overall=1'),..}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+			Ttl[1] = "Interest in Movie Upon Release"
+			Amg[1] = "Theatrical Viewers of Deadpool"
+			Var[1] = ListVarsOv(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 1, "Seen1.ContainsAny({Seen_in_a_theater})")
+			Ttl[1] = "Interest in Movie Upon Release"
+			Amg[1] = "HE Only Viewers"
+			Var[1] = ListVarsOv(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 1, "DPView_M.ContainsAny({Home_Entertainment_only_viewer})")
+				
+			QRE[1] = "Force"
+			Ttl[1] = "First Choice of Movie To See at Theater"
+			Amg[1] = "All"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			BoxListNum = 6
+			ListNum = 9
+			
+			QRE[1] = "UrgPre"
+			Ttl[1] = "Urgency"
+			Amg[1] = "All"
+			Var[1] = ListVarsOv(QRE[1], ListNum) 
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Ttl[2] = "When Would See Each Movie (Top 2 Box and By Box)"
+			Var[1] = QRE[1] + "_T2B"+ "{Base('Overall=1'),..}" + " + " + ListVarsByBoxOv(QRE[1], BoxListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+				
+			BoxListNum = 4
+			ListNum = 12
+			
+			QRE[1] = "SeqA"
+			Ttl[1] = "Sequel Aspects of Interest"
+			Amg[1] = "All"
+			Var[1] = ListVarsOv(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (By Box)"
+			Var[1] = ListVarsByBoxOv(QRE[1], BoxListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "NewOld"
+			Ttl[1] = "Staying True To vs Being Different Than Original"
+			Amg[1] = "All"
+			Var[1] = QRE[1]+ "{Base('Overall=1'), eMean 'Mean' mean(NewOld), eMin 'Min' min(NewOld), eMax 'Max' max(NewOld), eStddev 'Standard Deviation' stddev(NewOld)}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			ListNum = 23
+			
+			QRE[1] = "StarFan"
+			Ttl[1] = "Star Fanship"
+			Amg[1] = "All"
+			Var[1] = ListVars(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (Top Box)"
+			Var[1] = QRE[1] + "_TB"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+
+			BoxListNum = 9
+			ListNum = 7
+			
+			QRE[1] = "Touchpoint"
+			Ttl[1] = "Character Interaction Ways"
+			Amg[1] = "Aware of Each Character"
+			Var[1] = ListVars(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (By Box)"
+			Var[1] = ListVarsByBox(QRE[1], BoxListNum) + " + " + QRE[1] + "_SMB"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (Grid)"
+			GridBanner = QRE[1]
+			Var[1] = QRE[1] + "[..].Column{base(), Read_a_comic_book, Played_a_video_game, Bought_a_movie_on_DVD_Blu_ray_or_a_digital_copy, 'Net : Saw a movie in the theater, Saw a movie but didn''t buy it or pay to see it in the theater' net({Saw_a_movie_in_the_theater 'Saw a movie in the theater', Saw_a_movie_but_didn_t_buy_it_or_pay_to_see_it_in_the_theater 'Saw a movie but didn''t buy it or pay to see it in the theater'}), Saw_a_TV_series_animated_or_live_action, Bought_merchandise_toys_clothing_etc, Posted_on_social_media_a_blog_or_another_platform, None_of_the_above}"
+				MakeTab(var[1], GridBanner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+
+			ListNum = 7
+
+			QRE[1] = "FirstPoint"
+			Ttl[1] = "Character Introduction Ways"
+			Amg[1] = "Aware of Each Character"
+			Var[1] = ListVars(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")	
+			Ttl[2] = Ttl[1] + " (Grid)"
+			GridBanner = QRE[1]
+			Var[1] = QRE[1] + "[..].Column{base(), Read_a_comic_book, Played_a_video_game, Bought_a_movie_on_DVD_Blu_ray_or_a_digital_copy, 'Net : Saw a movie in the theater, Saw a movie but didn''t buy it or pay to see it in the theater' net({Saw_a_movie_in_the_theater 'Saw a movie in the theater', Saw_a_movie_but_didn_t_buy_it_or_pay_to_see_it_in_the_theater 'Saw a movie but didn''t buy it or pay to see it in the theater'}), Saw_a_TV_series_animated_or_live_action, Bought_merchandise_toys_clothing_etc, Other_please_specify, None_of_the_above_don_t_remember}"
+				MakeTab(var[1], GridBanner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+				
+			ListNum = 7
+			
+			QRE[1] = "ComicFreq"
+			Ttl[1] = "Character Comic Book Readership"
+			Amg[1] = "Read Comics"
+			Var[1] = ListVars(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box)"
+			Var[1] = QRE[1] + "_TB" + " + " + QRE[1] + "_T2B"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 0, "first", 0, "None")
+
+			BoxListNum = 4
+			ListNum = 24
+			
+			QRE[1] = "Seen"
+			Ttl[1] = "Movies Seen"
+			Amg[1] = "Aware of Character/Brand"
+'			Var[1] = ListVarsHideBase(QRE[1] + "A", ListNum) + " + " + QRE[1] + "A99"
+			Var[1] = ListVars(QRE[1] + "A", ListNum) + " + " + QRE[1] + "A99"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Amg[1] = "All"
+			Var[1] = ListVarsOv(QRE[1], ListNum) + " + " + QRE[1] + "A99{base('Overall=1'), ..}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Amg[1] = "Aware of Character/Brand"
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box, By Box)"
+			Var[1] = QRE[1] + "A_T2B" + " + " + QRE[1] + "A_TB" + " + " + QRE[1] + "A_2B"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+			Amg[1] = "All"
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box, By Box)"
+'			Var[1] = QRE[1] + "_T2B{Base('Overall=1'),..}" + " + " + ListVarsByBoxOv(QRE[1], BoxListNum)
+		    Var[1] = QRE[1] + "A_T2B{Base('Overall=1'),..}" + " + " + QRE[1] + "A_TB{Base('Overall=1'),..}" + " + " + QRE[1] + "A_2B{Base('Overall=1'),..}" + " + " + QRE[1] + "A_3B{Base('Overall=1'),..}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+	
+			ListNum = 24
+			
+			QRE[1] = "Seen_R"
+			Amg[1] = "All (Refield)"
+			Ttl[1] = "Movies Seen"
+			Var[1] = ListVars(QRE[1],ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box, By Box)"
+			Var[1] = QRE[1] + "_T2B" + " + " + QRE[1] + "_TB" + " + " + QRE[1] + "_2B"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "Seen_R"
+			Amg[1] = "Aware of Each (Refield)"
+			Ttl[1] = "Movies Seen"
+			Var[1] = ListVars(QRE[1],ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+		    Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box, By Box)"
+			Var[1] = QRE[1] + "A_T2B" + " + " + QRE[1] + "A_TB" + " + " + QRE[1] + "A_2B"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+
+			QRE[1] = "SeenM"
+			Amg[1] = "All (Refield Merge)"
+			Ttl[1] = "Movies Seen"
+			Var[1] = ListVars(QRE[1],ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box, By Box)"
+			Var[1] = QRE[1] + "_T2B" + " + " + QRE[1] + "_TB" + " + " + QRE[1] + "_2B"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "SeenB_R"
+			Amg[1] = "Seen Any Movie Only in the Theater (Refield)"
+			Ttl[1] = "Movies Seen Elsewhere" 
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+				
+			QRE[1] = "Seen_R/SeenB_R"
+			Amg[1] = "All (Refield)"
+			Ttl[1] = "Movies Seen in a Theater AND Elsewhere"
+			Var[1] = "SeenX{Base('Overall=1'), ..} 'Seen in a Theater and Elsewhere'"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "Seen_R/SeenB_R"
+			Amg[1] = "All (Refield)"
+			Ttl[1] = "Movies Seen Elsewhere"
+			Var[1] = "SeenY{Base('Overall=1'), ..} 'Seen in a Theater'"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+
+			QRE[1] = "DPViewA, DPViewB, DPViewA_R, DPViewA_M, DPViewB_M"
+			Ttl[1] = "Deadpool Viewership"
+			Amg[1] = "All (Completes, Refield, Refield Merge)"
+			Var[1] = "DPViewA{Base('Overall=1'),..} + DPViewB{Base('Overall=1'),..} + DPViewA_R{base('Refield.ContainsAny({Refield})'),..} + DPViewA_M{Base('Overall=1'),..} + DPView_M{Base('Overall=1'),..}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")			
+
+			ListNum = 24
+			
+			QRE[1] = "Rate"
+			Ttl[1] = "Movie Rating"
+			Amg[1] = "Seen"
+			Var[1] = ListVars(QRE[1], ListNum) + " + " + QRE[1] + "99"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+'			Amg[1] = "Seen Theatrically"
+'			Var[1] = ListVars(QRE[1] + "A", ListNum) + " + " + QRE[1] + "99"
+'				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")	
+			Amg[1] = "Seen Elsewhere"
+			Var[1] = ListVars(QRE[1] + "B", ListNum) + " + " + QRE[1] + "99"
+				If screener = 0 then MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			Amg[1] = "Seen"
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box)"
+			Var[1] = QRE[1] + "_TB + " + QRE[1] + "_T2B"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+'			Amg[1] = "Seen Theatrically"
+'			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box)"
+'			Var[1] = QRE[1] + "A_TB" + " + " + QRE[1] + "A_T2B"
+'				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+		    Amg[1] = "Seen Elsewhere"
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box)"
+			Var[1] = QRE[1] + "B_TB + " + QRE[1] + "B_T2B"
+				If screener = 0 then MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+				
+			BoxListNum = 4
+			ListNum = 24
+			
+			QRE[1] = "MultiSeen"
+			Ttl[1] = "How Many Times Seen Each Movie At Theater"
+			Amg[1] = "Seen Theatrically"
+			Var[1] = ListVars(QRE[1], ListNum) + " + " + QRE[1] + "99"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (By Box)"
+			Var[1] = ListVarsByBox(QRE[1], BoxListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (Grid)"
+			GridBanner = QRE[1]
+			Var[1] = QRE[1] + "[..].Column"
+				MakeTab(var[1], GridBanner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+
+			BoxListNum = 5
+			ListNum = 24
+			
+			QRE[1] = "DeadTimeB"
+			Ttl[1] = "How Many Times Seen Each Movie Not At Theater"
+			Amg[1] = "Seen Each Movie Not in Theater"
+			Var[1] = ListVars(QRE[1], ListNum) + " + " + QRE[1] + "99"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (By Box)"
+			Var[1] = ListVarsByBox(QRE[1], BoxListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (Grid)"
+			GridBanner = QRE[1]
+			Var[1] = QRE[1] + "[..].Column"
+				MakeTab(var[1], GridBanner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+
+			ListNum = 24
+				
+			QRE[1] = "DeadTimeB_R"
+			Amg[1] = "Seen Elsewhere (Refield)"
+			Ttl[1] = "Movies Seen Elsewhere Frequency"
+			Var[1] = ListVars(QRE[1],ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " Grid"	
+				MakeTab(QRE[1] + "[..].Column", QRE[1], Amg[1], QRE[1], Ttl[2], TableDoc, 0, "first", 0, "None")
+
+				
+			QRE[1] = "DeadTimeB_M"
+			Amg[1] = "Seen Elsewhere (Refield Merge)"
+			Ttl[1] = "Movies Seen Elsewhere Frequency"
+			Var[1] = ListVars(QRE[1],ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " Grid"	
+				MakeTab(QRE[1] + "[..].Column", QRE[1], Amg[1], QRE[1], Ttl[2], TableDoc, 0, "first", 0, "None")
+				
+			QRE[1] = "Own"
+			Ttl[1] = "Movie Ownership"
+			Amg[1] = "Seen Movie"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			Amg[1] = "All"
+			Var[1] = QRE[1] + "{base('Overall=1'), .., None_of_the_above [IsFixed = TRUE]}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+
+			QRE[1] = "Own_R"
+			Ttl[1] = "Movies Ownership"
+			Amg[1] = "Seen Any (Refield)"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, SortCol, 0, "None")
+
+			QRE[1] = "Own_M"
+			Ttl[1] = "Movies Ownership"
+			Amg[1] = "Seen Any (Refield Merge)"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, SortCol, 0, "None")
+				
+			QRE[1] = "WhereSee_R"
+			Ttl[1] = "Deadpool Viewership Location"
+			Amg[1] = "Home Entertainment Viewers (Refield)"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, SortCol, 0, "None")
+			
+				
+	If Screener = 0 then
+				
+			QRE[1] = "BrandDesc1, BrandDesc2, BrandDesc3, BrandDesc4, BrandDesc5"
+			Ttl[1] = "Brand Descriptions"
+			Amg[1] = "Aware"
+			Var[1] = RemCom(QRE[1])
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+'			Ttl[2] = Ttl[1] + " (Grid)"
+'			GridBanner = QRE[1]
+'			Var[1] = QRE[1] + "[..].Column"
+'				MakeTab(var[1], GridBanner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+			Amg[1] = "Viewers"
+			Var[1] = RemCom(QRE[1])
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 1, "Seen1.ContainsAny({Seen_in_a_theater, Seen_but_not_in_a_theater}, True)")
+			Amg[1] = "Non Viewers"
+			Var[1] = RemCom(QRE[1])
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 1, "Seen1.ContainsAny({Have_heard_of_but_not_seen, Have_never_heard_of}, True)")
+				
+			QRE[1] = "BrandDesc"
+			Ttl[1] = "Brand Descriptions (Grid)"
+			Amg[1] = "Aware"
+			Var[1] = QRE[1]
+			GridBanner = QRE[1]
+			Var[1] = QRE[1] + "[..].Column"
+				MakeTab(var[1], GridBanner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			Amg[1] = "Viewers"
+			Var[1] = QRE[1]
+			GridBanner = QRE[1] + "A"
+			Var[1] = QRE[1] + "A[..].Column"
+				MakeTab(var[1], GridBanner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			Amg[1] = "Non-Viewers"
+			Var[1] = QRE[1]
+			GridBanner = QRE[1] + "AA"
+			Var[1] = QRE[1] + "AA[..].Column"
+				MakeTab(var[1], GridBanner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			
+			
+			
+			QRE[1] = "StoryLeft1, StoryLeft2, StoryLeft3, StoryLeft4, StoryLeft5"
+			Ttl[1] = "More Story Left/No More Story Left Per Movie"
+			Amg[1] = "Aware"
+			Var[1] = RemCom(QRE[1])
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			
+			ListNum = 5
+			BoxListNum = 2
+			
+			QRE[1] = "StoryLeft"
+			Ttl[1] = "More Story Left/No More Story Left Per Movie (Grid)"
+			Amg[1] = "Aware"
+			Ttl[2] = Ttl[1] + " (By Box)"
+			Var[1] = ListVarsByBox(QRE[1], BoxListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+			GridBanner = QRE[1]
+			Var[1] = QRE[1] + "[..].Column"
+				MakeTab(var[1], GridBanner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+		
+				
+			QRE[1] = "CharDesc"
+			Ttl[1] = "Deadpool Character Descriptions"
+			Amg[1] = "All"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			Amg[1] = "Viewers"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 1, "Seen1.ContainsAny({Seen_in_a_theater, Seen_but_not_in_a_theater}, True)")
+			Amg[1] = "Non Viewers"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 1, "Seen1.ContainsAny({Have_heard_of_but_not_seen, Have_never_heard_of}, True)")
+
+				
+			QRE[1] = "DeadAware"
+			Ttl[1] = "Deadpool Character Experience"
+			Amg[1] = "All"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+				
+			
+			
+			ListNum = 9
+			
+			QRE[1] = "CharSeeA"
+			Ttl[1] = "Level of Excitement to See Characters"
+			Amg[1] = "All"
+			Var[1] = ListVars(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (Top, Top 2 Box)"
+			Var[1] = QRE[1] + "_TB" + "+" + QRE[1] + "_T2B"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "CharSeeB"
+			Ttl[1] = "Top Character"
+			Amg[1] = "Very/Somewhat Excited About Character"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			ListNum = 22
+			
+			QRE[1] = "WhyInt"
+			Ttl[1] = "Reasons for Interest"
+			Amg[1] = "Top 2 Box Interest in Deadpool"
+			Var[1] = ListVars(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "MovInt1.ContainsAny({Definitely_interested})")
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box)"
+			Var[1] = QRE[1] + "_TB" + " + " + QRE[1] + "_T2B"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, SortCol , 0, "MovInt1.ContainsAny({Definitely_interested})")
+			Amg[1] = "Definitely Interested"
+			Var[1] = ListVars(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 1, "MovInt1.ContainsAny({Definitely_interested})")
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box)"
+			Var[1] = QRE[1] + "_TB" + " + " + QRE[1] + "_T2B"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, SortCol , 1, "MovInt1.ContainsAny({Definitely_interested})")
+'			Amg[1] = "Probable Interest"
+'			Var[1] = ListVars(QRE[1], ListNum)
+'				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 1, "MovInt1.ContainsAny({Probably_interested})")
+'			Ttl[2] = Ttl[1] + " (Top Box)"
+'			Var[1] = QRE[1] + "_TB"
+'				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 1, "MovInt1.ContainsAny({Probably_interested})")
+'			Ttl[2] = Ttl[1] + " (Top 2 Box)"
+'			Var[1] = QRE[1] + "_T2B"
+'				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 1, "MovInt1.ContainsAny({Probably_interested})")
+'				
+			ListNum = 22
+			
+			QRE[1] = "WhyNoInt"
+			Ttl[1] = "Reasons for Non Interest"
+			Amg[1] = "Bottom 3 Box Interest in Deadpool"
+			Var[1] = ListVarsN(QRE[1], 1, 15) + " + " + ListVarsN(QRE[1], 19, 22)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "MovInt1.ContainsAny({Probably_interested})")
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box)"
+			Var[1] = QRE[1] + "_TB" + " + " + QRE[1] + "_T2B"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "MovInt1.ContainsAny({Probably_interested})")
+			Amg[1] = "Probably Interested"
+			Var[1] = ListVarsN(QRE[1], 1, 15) + " + " + ListVarsN(QRE[1], 19, 22)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 1, "MovInt1.ContainsAny({Probably_interested})")
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box)"
+			Var[1] = QRE[1] + "_TB" + " + " + QRE[1] + "_T2B"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 1, "MovInt1.ContainsAny({Probably_interested})")
+'				
+'			
+'			Amg[1] = "Bottom 3 Box Interest"
+'			Var[1] = ListVarsN(QRE[1], 1, 15) + " + " + ListVarsN(QRE[1], 19, 22)
+'				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 1, "MovInt1.ContainsAny({Might_or_might_not_be_interested, Probably_not_interested, Definitely_not_interested})")
+'			Ttl[2] = Ttl[1] + " (Top Box)"
+'			Var[1] = QRE[1] + "_TB"
+'				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 1, "MovInt1.ContainsAny({Might_or_might_not_be_interested, Probably_not_interested, Definitely_not_interested})")
+'			Ttl[2] = Ttl[1] + " (Top 2 Box)"
+'			Var[1] = QRE[1] + "_T2B"
+'				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 1, "MovInt1.ContainsAny({Might_or_might_not_be_interested, Probably_not_interested, Definitely_not_interested})")
+'
+'			Amg[1] = "Bottom 2 Box Interest"
+'			Var[1] = ListVarsN(QRE[1], 1, 15) + " + " + ListVarsN(QRE[1], 19, 22)
+'				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 1, "MovInt1.ContainsAny({Probably_not_interested, Definitely_not_interested})")
+'			Ttl[2] = Ttl[1] + " (Top Box)"
+'			Var[1] = QRE[1] + "_TB"
+'				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 1, "MovInt1.ContainsAny({Probably_not_interested, Definitely_not_interested})")
+'			Ttl[2] = Ttl[1] + " (Top 2 Box)"
+'			Var[1] = QRE[1] + "_T2B"
+'				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 1, "MovInt1.ContainsAny({Probably_not_interested, Definitely_not_interested})")
+'
+				
+			QRE[1] = "GenreA"
+			Ttl[1] = "Type of DP2 Movie Desired"
+			Amg[1] = "All"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "GenreB"
+			Ttl[1] = "Type of DP2 Movie Desired"
+			Amg[1] = "Only Selected 'Superhero' in GenreA"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "GenreC"
+			Ttl[1] = "Type of DP2 Movie Expected"
+			Amg[1] = "All"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "GenreD"
+			Ttl[1] = "Type of DP2 Movie Expected"
+			Amg[1] = "Only Selected 'Superhero' in GenreC"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "HumBalA"
+			Ttl[1] = "Action Humor Balance Deadpool 1"
+			Amg[1] = "All"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+
+			QRE[1] = "HumBalB"
+			Ttl[1] = "Action Humor Balance Deadpool 2"
+			Amg[1] = "All"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			BoxListNum = 4
+			ListNum = 7
+			
+			QRE[1] = "HumWant"
+			Ttl[1] = "How Much of Each Type of Humor Preferred"
+			Amg[1] = "All"
+			Var[1] = ListVars(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box, Bottom Box)"
+			Var[1] = QRE[1] + "_TB + " + QRE[1] + "_T2B + " + QRE[1] + "_B2B"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, "first", 0, "None")
+
+				
+			QRE[1] = "CharBal"
+			Ttl[1] = "Character Focus Sliders"
+			Amg[1] = "All"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "WhoSeenA, AgeApp,GenApp "
+			Ttl[1] = "Audience Perception (Who, Age, Genre)"
+			Amg[1] = "All"
+			Var[1] = RemCom(QRE[1])
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+				
+			QRE[1] = "MaxDiff"
+			Ttl[1] = "MaxDiff Scores"
+			Var[1] = "MaxDiff1"'{base() [IsHidden=TRUE], unweightedbase() [IsHidden=True], ..}"
+			Amg[1] = "All"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Ttl[1] = "MaxDiff Scores"
+			Var[1] = "MaxDiff1"'{base() [IsHidden=TRUE], unweightedbase() [IsHidden=True], ..}"
+			Amg[1] = "Probably Interested"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 1, "MovInt1.ContainsAny({Probably_interested})")
+				
+			Amg[1] = "Deadpool Viewers"
+				
+			QRE[1] = "GenreDPA"
+			Ttl[1] = "DP1 Genre Perception "
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "GenreDPB"
+			Ttl[1] = "DP1 Genre Perception "
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1] + " And Only Selected 'Superhero' in GenreDPA", QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "WhySeeA"
+			Ttl[1] = "Reasons for Seeing DP1 (In the Theater)"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "WhySeeB"
+			Ttl[1] = "Most Important Reason Interested in Deadpool 1 (In the Theater)"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1] + " And Selected 2+ in WhySeeA", QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			BoxListNum = 5
+			ListNum = 24
+			
+			QRE[1] = "ElemEnjoy"
+			Ttl[1] = "Elements Enjoyed in DP1"
+			Amg[1] = "Deadpool Viewers"
+			Var[1] = ListVars(QRE[1], ListNum)
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box, 3-4 Box)"
+			Var[1] = QRE[1] + "_TB + " + QRE[1] + "_T2B + " + QRE[1] + "_NB"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, SortCol, 0, "None")				
+            Amg[1] = "Theatrical viewers of Deadpool"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 1, "Seen1.ContainsAny({Seen_in_a_theater})")
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box, 3-4 Box)"
+			Var[1] = QRE[1] + "_TB + " + QRE[1] + "_T2B + " + QRE[1] + "_NB"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, SortCol, 1, "Seen1.ContainsAny({Seen_in_a_theater})")	
+			 Amg[1] = "HE only viewers"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 1, "DPViewA.ContainsAny({Home_Entertainment_only_viewer}) ")
+			Ttl[2] = Ttl[1] + " (Top Box, Top 2 Box, 3-4 Box)"
+			Var[1] = QRE[1] + "_TB + " + QRE[1] + "_T2B + " + QRE[1] + "_NB"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[2], TableDoc, 1, SortCol, 1, "DPViewA.ContainsAny({Home_Entertainment_only_viewer}) ")	
+					
+				
+			
+			QRE[1] = "WhyNoSeeA"
+			Ttl[1] = "Reasons for Not Seeing DP1 in Theaters"
+			Amg[1] = "Non-Theatrical Viewers"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			Amg[1] = "HE only viewer"
+			    MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 1, "DPViewA.ContainsAny({Home_Entertainment_only_viewer})")
+			Amg[1] = "Non-viewer"
+			    MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 1, "DPViewA.ContainsAny({Non_viewer})")
+				
+			
+			QRE[1] = "WhyNoSeeB"
+			Ttl[1] = "Most Important Reason Didn't See Deadpool 1 in Theaters"
+			Amg[1] = "Non Viewers"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1] + " And Selected 2+ in WhyNoSeeA", QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "WhoSeen"
+			Ttl[1] = "Who Saw Deadpool 1 in Theaters With"
+			Amg[1] = "Watched Deadpool 1 in Theaters"
+			Var[1] = QRE[1]
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "DeadOwn, DeadOwn_R, DeadOwn_M"
+			Ttl[1] = "Deadpool Movie Owned Format"
+			Amg[1] = "Deadpool Movie Owner (Completes, Refield, Refield Merge)"
+			Var[1] = RemCom(QRE[1])
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+
+			QRE[1] = "AwareB, FanA, XMenA, XMenB, XMenC"
+			Ttl[1] = "X-Men Connection"
+			Amg[1] = "All"
+			Var[1] = RemCom(QRE[1])
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+				
+			QRE[1] = "Education, Empl2, Inc, Live"
+			Ttl[1] = "Demographics"
+			Amg[1] = "All"
+			Var[1] = RemCom(QRE[1])
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
+				
+			QRE[1] = "OEGenre"
+			Ttl[1] = "Coded Open - OEGenre"
+			Amg[1] = "All"
+			Var[1] = QRE[1] + "{base(), superhero_GEN_super_hero, comedy_funny_humor_GEN, adventure_GEN, drama, action_GEN, romance, action_comedy_combo, like_first_film_like_previous_film, dark_humor, thriller, comic_book_movie, rated_r_r_rated_r_rated, less_violent, action_adventure_combo, suspense, serious, fantasy, action_superhero_combo, unique_different, sarcastic_humor, sci_fi_sci_fi_scifi_science_fiction, horror_scary, raunchy_comedy, dramedy, less_vulgar, violent_gore_killing, exciting, edgy, family_friendly, superhero_comedy_combo, superhero_action_comedy_combo, adult_humor, want_it_to_be_good, fun, new_characters, don’t_know_don’t_rememember_can_t_remember_not_sure_unsure_no_idea [IsFixed = True], nothing_none [IsFixed = True], General_Positive [IsFixed= True], General_Negative [IsFixed= True], Other [IsFixed = True], Garbage_Response_Bad_Data [IsFixed= True], _3_00 [IsHidden=True]}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "OEGenreDP"
+			Ttl[1] = "Coded Open - OEGenreDP"
+			Amg[1] = "All"
+			Var[1] = QRE[1] + "{base(), superhero_GEN_super_hero, comedy_funny_humor_GEN, adventure_GEN, drama, action_GEN, romance, action_comedy_combo, like_first_film_like_previous_film, dark_humor, thriller, comic_book_movie, rated_r_r_rated_r_rated, less_violent, action_adventure_combo, suspense, serious, fantasy, action_superhero_combo, unique_different, sarcastic_humor, sci_fi_sci_fi_scifi_science_fiction, horror_scary, raunchy_comedy, dramedy, less_vulgar, violent_gore_killing, exciting, edgy, family_friendly, superhero_comedy_combo, superhero_action_comedy_combo, adult_humor, it_was_good, fun, new_characters, don’t_know_don’t_rememember_can_t_remember_not_sure_unsure_no_idea [IsFixed = True], nothing_none [IsFixed = True], General_Positive [IsFixed= True], General_Negative [IsFixed= True], Other [IsFixed = True], Garbage_Response_Bad_Data [IsFixed= True]}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "OETop1"
+			Ttl[1] = "Coded Open - OETop Deadpool"
+			Amg[1] = "All"
+			Var[1] = QRE[1] + "{base(), .., don’t_know_don’t_rememember_can_t_remember_not_sure_unsure_no_idea [IsFixed= True], nothing_none [IsFixed= True], General_Positive [IsFixed= True], General_Negative [IsFixed= True], Other [IsFixed= True], Garbage_Response_Bad_Data [IsFixed= True]}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "OETop2"
+			Ttl[1] = "Coded Open - OETop Captain America"
+			Amg[1] = "All"
+			Var[1] = QRE[1] + "{base(), .., don’t_know_don’t_rememember_can_t_remember_not_sure_unsure_no_idea [IsFixed= True], nothing_none [IsFixed= True], General_Positive [IsFixed= True], General_Negative [IsFixed= True], Other [IsFixed= True], Garbage_Response_Bad_Data [IsFixed= True]}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "OETop3"
+			Ttl[1] = "Coded Open - OETop Iron Man"
+			Amg[1] = "All"
+			Var[1] = QRE[1] + "{base(), .., don’t_know_don’t_rememember_can_t_remember_not_sure_unsure_no_idea [IsFixed= True], nothing_none [IsFixed= True], General_Positive [IsFixed= True], General_Negative [IsFixed= True], Other [IsFixed= True], Garbage_Response_Bad_Data [IsFixed= True]}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "OETop4"
+			Ttl[1] = "Coded Open - OETop Spider-Man"
+			Amg[1] = "All"
+			Var[1] = QRE[1] + "{base(), .., don’t_know_don’t_rememember_can_t_remember_not_sure_unsure_no_idea [IsFixed= True], nothing_none [IsFixed= True], General_Positive [IsFixed= True], General_Negative [IsFixed= True], Other [IsFixed= True], Garbage_Response_Bad_Data [IsFixed= True]}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "OETop5"
+			Ttl[1] = "Coded Open - OETop Wolverine"
+			Amg[1] = "All"
+			Var[1] = QRE[1] + "{base(), .., don’t_know_don’t_rememember_can_t_remember_not_sure_unsure_no_idea [IsFixed= True], nothing_none [IsFixed= True], General_Positive [IsFixed= True], General_Negative [IsFixed= True], Other [IsFixed= True], Garbage_Response_Bad_Data [IsFixed= True]}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "OETop6"
+			Ttl[1] = "Coded Open - OETop Star-Lord"
+			Amg[1] = "All"
+			Var[1] = QRE[1] + "{base(), .., don’t_know_don’t_rememember_can_t_remember_not_sure_unsure_no_idea [IsFixed= True], nothing_none [IsFixed= True], General_Positive [IsFixed= True], General_Negative [IsFixed= True], Other [IsFixed= True], Garbage_Response_Bad_Data [IsFixed= True]}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+			QRE[1] = "OETop7"
+			Ttl[1] = "Coded Open - OETop Harley Quinn"
+			Amg[1] = "All"
+			Var[1] = QRE[1] + "{base(), .., don’t_know_don’t_rememember_can_t_remember_not_sure_unsure_no_idea [IsFixed= True], nothing_none [IsFixed= True], General_Positive [IsFixed= True], General_Negative [IsFixed= True], Other [IsFixed= True], Garbage_Response_Bad_Data [IsFixed= True]}"
+				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+				
+
+	End If			
+			
+			'----------------------------
+			'Coded Opens
+			'----------------------------
+			
+			'OEList[1]= "OEHowWatch"
+			'OEList[2]= "OEWhyInt"
+			'OEList[3]= "OEUnique"
+	
+			
+			'for i = 1 to 3
+			'	QRE[1] = OEList[i]
+			'	Ttl[1] = "Coded Open - " + OEList[i]
+			'	Var[1] = OEList[i] + "_Code"
+			'		MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 1, "first", 0, "None")
+			'next
+	
+			
+			'----------------------------
+			'Weights
+			'----------------------------	
+			For we = 0 to TableDoc.Tables.Count-1
+				TableDoc.Tables[we].weight = WgtVar
+			next
+			
+				
+		End With
+		
+		'----------------------------
+		'Populate the Tables
+		'----------------------------
+	  	TableDoc.Populate()
+	
+		'----------------------------
+		'Save the tables document
+		'----------------------------
+	  	TableDoc.Save(Project + " " + Sample[S] + " " + Cntry[C] + " V1.mtd")
+		
+		'----------------------------
+		'Export the tables 
+		'----------------------------
+		If Screener = 0 then EXPORT_FILE = myPath + "Tabs\Tab Prep\Exports\Export " + Sample[S] + " " + Cntry[C] + ".xlsx"
+		If Screener = 1 and Nonrejecters = 0 then EXPORT_FILE = myPath + "Tabs\Tab Prep\Exports\Export " + Sample[S] + " " + Cntry[C] + " Screener General MovieGoers.xlsx"
+		If Screener = 1 and Nonrejecters = 1 then EXPORT_FILE = myPath + "Tabs\Tab Prep\Exports\Export " + Sample[S] + " " + Cntry[C] + " Screener Superhero NonRejecters.xlsx"
+	
+		With TableDoc
+				With .Exports["VergeExcelExport"]
+					.Properties["DisplayAnnotations"] = True
+					.Properties["FileFormat"] = "Excel 2007"
+					.Properties["Interactive"] = False
+					.Properties["LaunchApplication"] = False
+					.Properties["OverwriteOutput"] = True
+					.Properties["ElementLabels"] = True
+					.Properties["VariableLabels"] = True
+					.Properties["Destination"] = EXPORT_FILE
+					.Properties["ShowHeadings"] = True
+					.Properties["TableOfContents"] = False
+					.Properties["FreezeFrames"] = False
+					.Properties["PageSetup.LeftMargin"] = 0.15
+					.Properties["PageSetup.RightMargin"] = 0.15
+					.Properties["PageSetup.TopMargin"] = 0.25
+					.Properties["PageSetup.BottomMargin"] = 0.25
+					.Properties["PageSetup.HeaderMargin"] = 0.25
+					.Properties["PageSetup.FooterMargin"] = 0.25
+					.Properties["PageSetup.Orientation"] = 2
+					.Properties["MinimumAnnotationWidth"] = 5
+					.Properties["TopElementWidth"] = 7.5
+					.Properties["SideElementWidth"] = 30
+					.Properties["Colors.VariableLabelCell"] = "#C5D9F1"
+					.Properties["Colors.SignificanceCell"] = "#006100"
+					.Properties["Colors.SignificanceText"] = "#C6EFCE"
+					.Export()
+				End With
+		End With
+		
+		
+	
+'	  With TableDoc.Exports["mrHtmlExport"]
+'	      .Properties["Interactive"] = False
+'	      .Properties["OverwriteOutput"] = True
+'	      .Properties["LaunchApplication"] = True
+'	      .Properties["DisplayOption"] = "Table Only"
+'	      .Properties["LayoutStyle"] = "Frame Table of Contents"
+'	      .Properties["PresentationStyle"] = "Black and White"
+'	      .Export(Project + Sample[S] + Cntry[C] +".htm")
+'	  End With 
+
+	Next
+Next
+	
+
+
+'*******************************************'
+'	SubRoutines & Functions - DO NOT EDIT	'
+'*******************************************'
+
+Sub MakeTab (Side, Top, Amg, QRE, Titl, TableDoc, Sort, SortCol, Filter, FilterSpec)
+With TableDoc
+	.Tables.AddNew("Table" + CText(TableDoc.Tables.Count + 1),  Side + "*" + Top, Titl)
+	.Tables[TableDoc.Tables.Count-1].Annotations[2 ].Specification = "Among " + Amg
+	.Tables[TableDoc.Tables.Count-1].Annotations[4 	].Specification = QRE
+	
+	
+'	if .Tables[TableDoc.Tables.Count-1].Axes[0].SubAxes.Count = 1 then
+'		.Tables[TableDoc.Tables.Count-1].Rules.AddNew(0 '! Hide !', 0 '! Row !', 0, 1 '! LessEqual !', 0)
+'	end if
+'	
+'	if Right(.Tables[TableDoc.Tables.Count-1].Description, 17) = "(Top & Top 2 Box)" then
+'		.Tables[TableDoc.Tables.Count-1].Rules.AddNew(0 '! Hide !', 0 '! Row !', 0, 1 '! LessEqual !', 0)
+'	end if
+'	
+'	
+'	if Right(.Tables[TableDoc.Tables.Count-1].Description, 8) = "(By Box)" then
+'		.Tables[TableDoc.Tables.Count-1].Rules.AddNew(0 '! Hide !', 0 '! Row !', 0, 1 '! LessEqual !', 0)
+'	end if
+	
+	If Sort = 1 then .Tables[TableDoc.Tables.Count-1].SortColumn = SortCol
+	If Filter = 1 then .Tables[TableDoc.Tables.Count-1].Filters.AddNew("Filter1" + CText(TableDoc.Tables.Count + 1), FilterSpec)	
+	
+End With	
+
+End Sub
+
+
+Function ListVars (VarName, Numb)
+Dim i
+	ListVars = ""
+	For i = 1 to Numb
+		if i = 1 then ListVars = VarName + makestring(i)
+		if i > 1 then ListVars = ListVars + " + " + VarName + makestring(i)
+	next
+
+End Function
+
+Function ListVarsHideBase (VarName, Numb)
+Dim i
+	ListVarsHideBase = ""
+	For i = 1 to Numb
+		if i = 1 then ListVarsHideBase = VarName + makestring(i) + "{base() [IsHidden=True], unweightedbase() [IsHidden=True], ..}"
+		if i > 1 then ListVarsHideBase = ListVarsHideBase + " + " + VarName + makestring(i) + "{base() [IsHidden=True], unweightedbase() [IsHidden=True], ..}"
+	next
+
+End Function
+
+Function ListVarsOv (VarName, Numb)
+Dim i
+	ListVarsOv = ""
+	For i = 1 to Numb
+		if i = 1 then ListVarsOv = VarName + makestring(i) + "{Base('Overall=1'),..}"
+		if i > 1 then ListVarsOv = ListVarsOv + " + " + VarName + makestring(i) + "{Base('Overall=1'),..}"
+	next
+
+End Function
+
+
+Function ListVarsByBox (VarName, Numb)
+Dim i
+      ListVarsByBox = ""
+      For i = 1 to Numb
+            if i = 1 then ListVarsByBox = VarName + "_TB"
+            if i > 1 then ListVarsByBox = ListVarsByBox + " + " + VarName + "_" + makestring(i) + "B"
+      next
+
+End Function
+
+Function ListVarsByBoxOV (VarName, Numb)
+Dim i
+      ListVarsByBoxOV = ""
+      For i = 1 to Numb
+            if i = 1 then ListVarsByBoxOV = VarName + "_TB{Base('Overall=1'),..}"
+            if i > 1 then ListVarsByBoxOV = ListVarsByBoxOV + " + " + VarName + "_" + makestring(i) + "B{Base('Overall=1'),..}"
+      next
+
+End Function
+
+
+Function ListVarsN (VarName, Numb1, Numb2)
+Dim i
+	ListVarsN = ""
+	For i = Numb1 to Numb2
+		if i = Numb1 then ListVarsN = VarName + makestring(i)
+		if i > Numb1 then ListVarsN = ListVarsN + " + " + VarName + makestring(i)
+	next
+
+End Function
+
+
+Function ListVarsX (VarName, Numb1, Numb2)
+Dim i
+	ListVarsX = ""
+	For i = Numb1 to Numb2
+		if i = Numb1 then ListVarsX = VarName + makestring(i)
+		if i > Numb1 then ListVarsX = ListVarsX + " + " + VarName + makestring(i)
+	next
+
+End Function
+
+Function ListVarsInt (VarName, Numb)
+Dim i
+	ListVarsInt = ""
+	For i = 1 to Numb
+		if i = 1 then ListVarsInt = VarName + makestring(i) + "{base(), 'Top 2 Box' net({Definitely_interested, Probably_interested}), Net1 'Bottom 2 Box' net({Probably_not_interested, Definitely_not_interested })}"
+		if i > 1 then ListVarsInt = ListVarsInt + " + " + VarName + makestring(i)+ "{base(), 'Top 2 Box' net({Definitely_interested, Probably_interested}), Net1 'Bottom 2 Box' net({Probably_not_interested, Definitely_not_interested })}"
+	next
+
+End Function
+
+
+
+Function ListVarsShare (VarName, Numb)
+Dim i
+      ListVarsShare = ""
+      For i = 1 to Numb
+            if i = 1 then ListVarsShare = VarName + makestring(i) + "{base(), eMean 'Mean' mean(" + Varname + makestring(i) + ") [Decimals=2], eMinimum 'Minimum' min(" + Varname + makestring(i) + ") [Decimals=2], eMaximum 'Maximum' max(" + Varname + makestring(i) + ") [Decimals=2], _0To19 '0 - 19' expression('" + Varname + makestring(i) + " >= 0 AND " + Varname + makestring(i) + " <= 19'), _20To39 '20 - 39' expression('" + Varname + makestring(i) + " >= 20 AND " + Varname + makestring(i) + " <= 39'), _40To59 '40 - 59' expression('" + Varname + makestring(i) + " >= 40 AND " + Varname + makestring(i) + " <= 59'), _60To79 '60 - 79' expression('" + Varname + makestring(i) + " >= 60 AND " + Varname + makestring(i) + " <= 79'), _80To100 '80 - 100' expression('" + Varname + makestring(i) + " >= 80 AND " + Varname + makestring(i) + " <= 100')}"
+            if i > 1 then ListVarsShare = ListVarsShare + " + " + VarName + makestring(i)+ "{base(), eMean 'Mean' mean(" + Varname + makestring(i) + ") [Decimals=2], eMinimum 'Minimum' min(" + Varname + makestring(i) + ") [Decimals=2], eMaximum 'Maximum' max(" + Varname + makestring(i) + ") [Decimals=2], _0To19 '0 - 19' expression('" + Varname + makestring(i) + " >= 0 AND " + Varname + makestring(i) + " <= 19'), _20To39 '20 - 39' expression('" + Varname + makestring(i) + " >= 20 AND " + Varname + makestring(i) + " <= 39'), _40To59 '40 - 59' expression('" + Varname + makestring(i) + " >= 40 AND " + Varname + makestring(i) + " <= 59'), _60To79 '60 - 79' expression('" + Varname + makestring(i) + " >= 60 AND " + Varname + makestring(i) + " <= 79'), _80To100 '80 - 100' expression('" + Varname + makestring(i) + " >= 80 AND " + Varname + makestring(i) + " <= 100')}"
+      next
+
+End Function
+
+Function RemCom (VarName)
+Dim i, sp,leng
+	RemCom = ""
+	sp = split(VarName,",")
+	leng = len(sp)
+	For i = 1 to leng
+		if i = 1 then RemCom = sp[i-1]
+		if i > 1 then RemCom = RemCom + " + " + sp[i-1]
+	next
+
+End Function
+
+Function RemComOv (VarName)
+Dim i, sp,leng
+	RemComOv = ""
+	sp = split(VarName,",")
+	leng = len(sp)
+	For i = 1 to leng
+		if i = 1 then RemComOv = sp[i-1] + "{Base('Overall=1'),..}"
+		if i > 1 then RemComOv = RemComOv + " + " + sp[i-1] + "{Base('Overall=1'),..}"
+	next
+
+End Function
+
+Function RemComTop (VarName)
+Dim i, sp,leng
+	RemComTop = ""
+	sp = split(VarName,",")
+	leng = len(sp)
+	For i = 1 to leng
+		if i = 1 then RemComTop = sp[i-1] + "{base(), .., don’t_know_don’t_rememember_can_t_remember_not_sure_unsure_no_idea [IsFixed= True], nothing_none [IsFixed= True], General_Positive [IsFixed= True], General_Negative [IsFixed= True], Other [IsFixed= True], Garbage_Response_Bad_Data [IsFixed= True]}"
+		if i > 1 then RemComTop = RemComTop + " + " + sp[i-1] + "{base(), .., don’t_know_don’t_rememember_can_t_remember_not_sure_unsure_no_idea [IsFixed= True], nothing_none [IsFixed= True], General_Positive [IsFixed= True], General_Negative [IsFixed= True], Other [IsFixed= True], Garbage_Response_Bad_Data [IsFixed= True]}"
+	next
+
+End Function
+
+
+Function GetGridSort(QRE, C, Slice, SlNum)
+	if C = 0 then GetGridSort = "TerrGrid{Base} >" + QRE + "{" + Slice + makestring(SlNum) + "}"
+	if C > 0 then GetGridSort = QRE + "{" + Slice + makestring(SlNum) + "}"
+End Function	

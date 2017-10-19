@@ -1,0 +1,1650 @@
+  GET
+  FILE='K:\Deadpool 2\Brand and Sequel Study REFIELD\Wave 1\Data\Prep\Ugam\C873_BS_DEADPOOL_US_GEN_Refield_FINAL_MERGED_Completes_10_10_2017.sav'.
+  DATASET NAME DataSet1 WINDOW=FRONT.
+
+Compute Refield=0.
+IF(Seen_R1.1>=0) Refield=1.
+Val Label Refield 0 "Non-Refield"
+1 "Refield".
+Freq Refield.
+
+***************************************************************************************************
+* New Banner points
+
+Compute ViewAB.1 = 0.
+Compute ViewAB.2 = 0.
+Compute ViewAB.3 = 0.
+Compute ViewAB.4 = 0.
+If (DPViewA.1 = 1) ViewAB.1 = 1.
+If (DPViewA.2 = 1) ViewAB.2 = 1.
+If (DPViewA.3 = 1) ViewAB.3 = 1.
+If (DPViewA.4 = 1) ViewAB.4 = 1.
+Var Label ViewAB.1 "Theatrical only" ViewAB.2 "HE only" ViewAB.3 "Theatrical and HE" ViewAB.4 "Non-viewer" .
+
+MRSETS
+  /MDGROUP NAME=$ViewAB LABEL='Deadpool Viewer Type' CATEGORYLABELS = VARLABELS
+  VARIABLES=ViewAB.1 ViewAB.2 ViewAB.3 ViewAB.4 VALUE=1
+  /DISPLAY NAME=[$ViewAB].
+
+Freq ViewAB.1 DpViewA.1.
+
+Compute ViewAM.1 = 0.
+Compute ViewAM.2 = 0.
+Compute ViewAM.3 = 0.
+Compute ViewAM.4 = 0.
+If (DPViewA_M1 = 1) ViewAM.1 = 1.
+If (DPViewA_M2 = 1) ViewAM.2 = 1.
+If (DPViewA_M3 = 1) ViewAM.3 = 1.
+If (DPViewA_M4 = 1) ViewAM.4 = 1.
+Var Label ViewAM.1 "Theatrical only" ViewAM.2 "HE only" ViewAM.3 "Theatrical and HE" ViewAM.4 "Non-viewer" .
+
+MRSETS
+  /MDGROUP NAME=$ViewAM LABEL='Deadpool Viewer Type (Merged)' CATEGORYLABELS = VARLABELS
+  VARIABLES=ViewAM.1 ViewAM.2 ViewAM.3 ViewAM.4 VALUE=1
+  /DISPLAY NAME=[$ViewAM].
+
+delete variables ViewC.
+
+Compute ViewC.1 = 0.
+Compute ViewC.2 = 0.
+Compute ViewC.3 = 0.
+If (DPViewA.1 = 1 OR DPViewA.3 = 1) ViewC.1 = 1.
+If (DPViewA.2 = 1) ViewC.2 = 1.
+If (DPViewA.4 = 1) ViewC.3 = 1.
+Var Label ViewC.1 "Theatrical" ViewC.2 "HE only" ViewC.3 "Non-viewer" .
+
+MRSETS
+  /MDGROUP NAME=$ViewC LABEL='Deadpool Viewer Type' CATEGORYLABELS = VARLABELS
+  VARIABLES=ViewC.1 ViewC.2 ViewC.3 VALUE=1
+  /DISPLAY NAME=[$ViewC].
+
+
+If (DPViewA_M1 = 1 OR DPViewA_M3 = 1) ViewCM = 1.
+If (DPViewA_M2 = 1) ViewCM = 2.
+If (DPViewA_M4 = 1) ViewCM = 3.
+Var Label ViewCM "Deadpool Viewer Type (Merged)".
+Val Label ViewCM 1" Theatrical" 2 " HE only" 3 " Non-viewer" .
+
+compute ViewD=$sysmis.
+If (Seen1.1 = 1 OR Seen1.2=1) ViewD=1.
+If (Seen1.3 = 1 OR Seen1.4=1) ViewD=2.
+variable labels ViewD "Deadpool Viewer Type".
+Value labels ViewD 1"Seen" 2"Not Seen".
+
+compute ViewDM=$sysmis.
+If (SeenM1.1 = 1 OR SeenM1.2=1) ViewDM=1.
+If (SeenM1.3 = 1 OR SeenM1.4=1) ViewDM=2.
+variable labels ViewDM "Deadpool Viewer Type (Merged)".
+Value labels ViewDM 1"Seen" 2"Not Seen".
+
+Freq ViewDM.
+
+If (Own.1 = 1) OwnDP = 1.
+If (Own.1 <> 1) OwnDP = 2.
+Var Label OwnDP "Deadpool HE Ownership".
+Val Label OwnDP 1" Owner" 2 " Non-owner" .
+
+If (Own_M1 = 1) OwnDPM = 1.
+If (Own_M1 <> 1) OwnDPM = 2.
+Var Label OwnDPM "Deadpool HE Ownership (Merged)".
+Val Label OwnDPM 1" Owner" 2 " Non-owner" .
+
+delete variables ParentA.
+
+Compute ParentA = 2.
+If (Parent = 1) ParentA = 1.
+If (Parent = 2) ParentA = 2.
+Var Label ParentA "Parent".
+Val Label ParentA 1" Yes" 2 " No" .
+Freq ParentA.
+
+
+
+
+
+
+
+
+*******************************************************
+* Weight Variables
+
+Compute RegionBan = 0.
+IF (State = 7 OR State = 20 OR State = 22 OR State = 31 OR State = 32 OR State = 35 OR State = 39 OR State = 40 OR State = 47) RegionBan = 1.
+IF (State = 2  OR State = 4 OR State = 8  OR State = 9 OR State = 10 OR State = 11 OR State = 18 OR State = 21  OR State = 26 OR State = 28 OR State = 41 OR State = 43 OR State = 46 OR State = 50 OR State = 19 OR State = 37 OR State = 44) RegionBan = 2.
+IF (State = 13 OR State = 15 OR State = 16 OR State = 17 OR State = 23 OR State = 24 OR State = 25 OR State = 29 OR State = 30 OR State = 36 OR State = 42 OR State = 49) RegionBan = 3.
+IF (State = 1 OR State = 3 OR State = 5 OR State = 6 OR State = 12 OR State = 14 OR State = 27 OR State = 33 OR State = 34 OR State = 38 OR State = 45 OR State = 48 OR State = 51) RegionBan = 4.
+var label RegionBan "Region".
+val label RegionBan
+1 "NE"
+2 "S"
+3 "MW"
+4 "W".
+
+Recode Rac1 (1=1) (2=2) (3=3) (4=4) (5=4) Into RacWt.
+Recode RegionBan (1=1) (2=2) (3=3) (4=4) Into RegionWt.
+Recode Age4Gen (1=1) (2=2) (3=3) (4=4) (5=5) (6=6) (7=7) (8=8) Into AgeGenWt.
+
+Val Labels RacWt 1 Caucasian
+2 AA
+3 Hispanic
+4 Asian + Other.
+
+Val Labels RegionWt 1 NE
+2 S
+3 MW
+4 W.
+
+Val Labels AgeGenWt 1 Males 17-24
+2 Males 25-34
+3 Males 35-44
+4 Males 45-54
+5 Females 17-24
+6 Females 25-34
+7 Females 35-44
+8 Females 45-54.
+
+Var Label RacWt "Race Weight" RegionWt "Region Weight" AgeGenWt "AgeGen Weight".
+
+If (RacWt = 1 AND Quads = 1) RacWt2 = 1.
+If (RacWt = 1 AND Quads = 2) RacWt2 = 2.
+If (RacWt = 1 AND Quads = 3) RacWt2 = 3.
+If (RacWt = 1 AND Quads = 4) RacWt2 = 4.
+If (RacWt = 2 AND Quads = 1) RacWt2 = 5.
+If (RacWt = 2 AND Quads = 2) RacWt2 = 6.
+If (RacWt = 2 AND Quads = 3) RacWt2 = 7.
+If (RacWt = 2 AND Quads = 4) RacWt2 = 8.
+If (RacWt = 3 AND Quads = 1) RacWt2 = 9.
+If (RacWt = 3 AND Quads = 2) RacWt2 = 10.
+If (RacWt = 3 AND Quads = 3) RacWt2 = 11.
+If (RacWt = 3 AND Quads = 4) RacWt2 = 12.
+If (RacWt = 4 AND Quads = 1) RacWt2 = 13.
+If (RacWt = 4 AND Quads = 2) RacWt2 = 14.
+If (RacWt = 4 AND Quads = 3) RacWt2 = 15.
+If (RacWt = 4 AND Quads = 4) RacWt2 = 16.
+Var Label RacWt2 "Jurassic World and Clash Royale and Pokemon GO Overlap".
+Val Label RacWt2 1" Caucasian Males <35" 2 " Caucasian Males 35+" 3 " Caucasian Females <35" 4 " Caucasian Females 35+" 5 " AA Males <35" 6 " AA Males 35+" 7 " AA Females <35" 8 " AA Females 35+" 9 " Hispanic Males <35" 10 " Hispanic Males 35+" 11 " Hispanic Females <35" 12 " Hispanic Females 35+" 13 " Asian + Other Males <35" 14 " Asian + Other Males 35+" 15 " Asian + Other Females <35" 16 " Asian + Other Females 35+" .
+
+
+
+Compute FanshipWt = 0.
+
+If(FanA = 1 and Quads = 1) FanshipWt = 1.
+If(FanA = 1 and Quads = 2) FanshipWt = 2.
+If(FanA = 1 and Quads = 3) FanshipWt = 3.
+If(FanA = 1 and Quads = 4) FanshipWt = 4.
+
+
+
+Val Labels FanshipWt 1 "Male <35" 2 "Male 35+" 3 "Female <35" 4 "Female 35+" 0 "Other".
+
+Freq FanshipWt.
+
+
+Freq RacWt RegionWt AgeGenWt.
+
+Select if AgeGenWt > 0.
+
+IF(Refield = 1) RacWt_Refield=RacWt2.
+IF(Refield = 1) RegionWt_Refield=RegionWt.
+IF(Refield = 1) AgeGenWt_Refield=AgeGenWt.
+IF (Refield = 0) RacWt_Refield = 99.
+IF (Refield = 0) RegionWt_Refield = 99.
+IF (Refield = 0) AgeGenWt_Refield = 99.
+Val Labels RacWt_Refield 1" Caucasian Males <35" 2 " Caucasian Males 35+" 3 " Caucasian Females <35" 4 " Caucasian Females 35+" 5 " AA Males <35" 6 " AA Males 35+" 7 " AA Females <35" 
+8 " AA Females 35+" 9 " Hispanic Males <35" 10 " Hispanic Males 35+" 11 " Hispanic Females <35" 12 " Hispanic Females 35+" 13 " Asian + Other Males <35" 14 " Asian + Other Males 35+" 
+15 " Asian + Other Females <35" 16 " Asian + Other Females 35+" 99 "Non-Refield" 
+/RegionWt_Refield 1 "NE"
+2 "S"
+3 "MW"
+4 "W" 
+99 "Non-Refield"
+/AgeGenWt_Refield
+1 Males 17-24
+2 Males 25-34
+3 Males 35-44
+4 Males 45-54
+5 Females 17-24
+6 Females 25-34
+7 Females 35-44
+8 Females 45-54
+99 Non-Refield.
+Freq RacWt_Refield RegionWt_Refield AgeGenWt_Refield.
+
+Numeric WeightR (F9.8).
+freq DPVIewA.1 to DPVIewA.4.
+
+Rename Variables ViewA=ViewAR.
+compute ViewAR = $sysmis.
+do if refield = 1.
+IF(DPVIewA_R.1=1)ViewAR=1.
+IF(DPVIewA_R.2=1)ViewAR=2.
+IF(DPVIewA_R.3=1)ViewAR=3.
+IF(DPVIewA_R.4=1)ViewAR=4.
+END If.
+Val label ViewAR ViewA 1 Theatrical only
+2 HE only
+3 Theatrical and HE
+4 Non-viewer.
+Var Label ViewAR "Deadpool Viewer Type"
+ViewA  "Deadpool Viewer Type".
+Freq ViewA ViewAR.
+
+freq DPVIewA_R.1 to DPVIewA_R.4.
+
+if (MovGenre1=1) GenreWt=Quads.
+IF(MovGenre1>1) GenreWt=99.
+
+vari label GenreWt "Genre Weights".
+value labels GenreWt 1"Yes" 2"No".
+
+*******************************************************
+*Banner Requests
+
+Compute Pre.1 = 0.
+Compute Pre.2 = 0.
+Compute Pre.3 = 0.
+Compute Pre.4 = 0.
+Compute Pre.5 = 0.
+Compute Pre.6 = 0.
+IF (MovInt1 = 1) Pre.1 = 1.
+IF (MovInt1 = 2) Pre.2 = 1.
+IF (MovInt1 = 1 OR MovInt1 = 2) Pre.3 = 1.
+IF (MovInt1 > 1) Pre.4 = 1.
+IF (MovInt1 > 2) Pre.5 = 1.
+IF (MovInt1 > 3) Pre.6 = 1. 
+var label Pre.1 "Definitely interested"
+Pre.2 "Probably interested"
+Pre.3 "Top 2 box"
+Pre.4 "Not definitely interested"
+Pre.5 "Bottom 3 box"
+Pre.6 "Bottom 2 box"
+.
+MRSETS/MDGROUP NAME= $Pre LABEL = 'Deadpool 2 Pre-Interest'
+CATEGORYLABELS = VARLABELS
+VARIABLES= Pre.1 to Pre.6
+VALUE=1
+/DISPLAY NAME=[$Pre].
+
+Compute ComicRead.1 = 0.
+Compute ComicRead.2 = 0.
+Compute ComicRead.3 = 0.
+IF (Read1 = 1) ComicRead.1 = 1.
+IF (Read1 < 3) ComicRead.2 = 1.
+IF (Read1 > 2) ComicRead.3 = 1.
+var label
+ComicRead.1 "Regular reader"
+ComicRead.2 "Regularly/Sometimes"
+ComicRead.3 "Rarely/Never".
+MRSETS/MDGROUP NAME= $ComicRead LABEL = 'Comic Readership'
+CATEGORYLABELS = VARLABELS
+VARIABLES= ComicRead.1 to ComicRead.3
+VALUE=1
+/DISPLAY NAME=[$ComicRead].
+
+
+*******************************************************
+* Tammy Requests
+
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.1 = BrandDesc1.1.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.2 = BrandDesc1.2.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.3 = BrandDesc1.3.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.4 = BrandDesc1.4.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.5 = BrandDesc1.5.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.6 = BrandDesc1.6.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.7 = BrandDesc1.7.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.8 = BrandDesc1.8.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.1 = BrandDesc1.1.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.9 = BrandDesc1.9.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.10 = BrandDesc1.10.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.11 = BrandDesc1.11.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.12 = BrandDesc1.12.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.13 = BrandDesc1.13.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.14 = BrandDesc1.14.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.15 = BrandDesc1.15.
+If (Sum(Seen1.1, Seen1.2) > 0) BrandDescA1.16 = BrandDesc1.16.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.1 = BrandDesc2.1.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.2 = BrandDesc2.2.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.3 = BrandDesc2.3.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.4 = BrandDesc2.4.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.5 = BrandDesc2.5.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.6 = BrandDesc2.6.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.7 = BrandDesc2.7.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.8 = BrandDesc2.8.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.1 = BrandDesc2.1.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.9 = BrandDesc2.9.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.10 = BrandDesc2.10.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.11 = BrandDesc2.11.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.12 = BrandDesc2.12.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.13 = BrandDesc2.13.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.14 = BrandDesc2.14.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.15 = BrandDesc2.15.
+If (Sum(Seen2.1, Seen2.2) > 0) BrandDescA2.16 = BrandDesc2.16.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.1 = BrandDesc3.1.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.2 = BrandDesc3.2.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.3 = BrandDesc3.3.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.4 = BrandDesc3.4.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.5 = BrandDesc3.5.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.6 = BrandDesc3.6.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.7 = BrandDesc3.7.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.8 = BrandDesc3.8.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.1 = BrandDesc3.1.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.9 = BrandDesc3.9.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.10 = BrandDesc3.10.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.11 = BrandDesc3.11.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.12 = BrandDesc3.12.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.13 = BrandDesc3.13.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.14 = BrandDesc3.14.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.15 = BrandDesc3.15.
+If (Sum(Seen3.1, Seen3.2) > 0) BrandDescA3.16 = BrandDesc3.16.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.1 = BrandDesc4.1.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.2 = BrandDesc4.2.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.3 = BrandDesc4.3.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.4 = BrandDesc4.4.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.5 = BrandDesc4.5.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.6 = BrandDesc4.6.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.7 = BrandDesc4.7.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.8 = BrandDesc4.8.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.1 = BrandDesc4.1.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.9 = BrandDesc4.9.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.10 = BrandDesc4.10.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.11 = BrandDesc4.11.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.12 = BrandDesc4.12.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.13 = BrandDesc4.13.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.14 = BrandDesc4.14.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.15 = BrandDesc4.15.
+If (Sum(Seen4.1, Seen4.2) > 0) BrandDescA4.16 = BrandDesc4.16.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.1 = BrandDesc5.1.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.2 = BrandDesc5.2.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.3 = BrandDesc5.3.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.4 = BrandDesc5.4.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.5 = BrandDesc5.5.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.6 = BrandDesc5.6.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.7 = BrandDesc5.7.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.8 = BrandDesc5.8.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.1 = BrandDesc5.1.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.9 = BrandDesc5.9.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.10 = BrandDesc5.10.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.11 = BrandDesc5.11.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.12 = BrandDesc5.12.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.13 = BrandDesc5.13.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.14 = BrandDesc5.14.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.15 = BrandDesc5.15.
+If (Sum(Seen5.1, Seen5.2) > 0) BrandDescA5.16 = BrandDesc5.16.
+
+
+Var label BrandDescA1.1 "Has ''big event'' movies"
+BrandDescA1.2 "Cool"
+BrandDescA1.3 "Edgy, and I like that"
+BrandDescA1.4 "Has movies that are fun to watch with others"
+BrandDescA1.5 "Something I talk about with others"
+BrandDescA1.6 "Has something for everyone"
+BrandDescA1.7 "Modern"
+BrandDescA1.8 "Unique"
+BrandDescA1.9 "Seems like it is everywhere, and I like that"
+BrandDescA1.10 "Exciting"
+BrandDescA1.11 "Has movies I like to watch over and over again"
+BrandDescA1.12 "I'm tired of seeing stuff from this"
+BrandDescA1.13 "Only for males"
+BrandDescA1.14 "Crude"
+BrandDescA1.15 "Annoying"
+BrandDescA1.16 "None of the above"
+BrandDescA2.1 "Has ''big event'' movies"
+BrandDescA2.2 "Cool"
+BrandDescA2.3 "Edgy, and I like that"
+BrandDescA2.4 "Has movies that are fun to watch with others"
+BrandDescA2.5 "Something I talk about with others"
+BrandDescA2.6 "Has something for everyone"
+BrandDescA2.7 "Modern"
+BrandDescA2.8 "Unique"
+BrandDescA2.9 "Seems like it is everywhere, and I like that"
+BrandDescA2.10 "Exciting"
+BrandDescA2.11 "Has movies I like to watch over and over again"
+BrandDescA2.12 "I'm tired of seeing stuff from this"
+BrandDescA2.13 "Only for males"
+BrandDescA2.14 "Crude"
+BrandDescA2.15 "Annoying"
+BrandDescA2.16 "None of the above"
+BrandDescA3.1 "Has ''big event'' movies"
+BrandDescA3.2 "Cool"
+BrandDescA3.3 "Edgy, and I like that"
+BrandDescA3.4 "Has movies that are fun to watch with others"
+BrandDescA3.5 "Something I talk about with others"
+BrandDescA3.6 "Has something for everyone"
+BrandDescA3.7 "Modern"
+BrandDescA3.8 "Unique"
+BrandDescA3.9 "Seems like it is everywhere, and I like that"
+BrandDescA3.10 "Exciting"
+BrandDescA3.11 "Has movies I like to watch over and over again"
+BrandDescA3.12 "I'm tired of seeing stuff from this"
+BrandDescA3.13 "Only for males"
+BrandDescA3.14 "Crude"
+BrandDescA3.15 "Annoying"
+BrandDescA3.16 "None of the above"
+BrandDescA4.1 "Has ''big event'' movies"
+BrandDescA4.2 "Cool"
+BrandDescA4.3 "Edgy, and I like that"
+BrandDescA4.4 "Has movies that are fun to watch with others"
+BrandDescA4.5 "Something I talk about with others"
+BrandDescA4.6 "Has something for everyone"
+BrandDescA4.7 "Modern"
+BrandDescA4.8 "Unique"
+BrandDescA4.9 "Seems like it is everywhere, and I like that"
+BrandDescA4.10 "Exciting"
+BrandDescA4.11 "Has movies I like to watch over and over again"
+BrandDescA4.12 "I'm tired of seeing stuff from this"
+BrandDescA4.13 "Only for males"
+BrandDescA4.14 "Crude"
+BrandDescA4.15 "Annoying"
+BrandDescA4.16 "None of the above"
+BrandDescA5.1 "Has ''big event'' movies"
+BrandDescA5.2 "Cool"
+BrandDescA5.3 "Edgy, and I like that"
+BrandDescA5.4 "Has movies that are fun to watch with others"
+BrandDescA5.5 "Something I talk about with others"
+BrandDescA5.6 "Has something for everyone"
+BrandDescA5.7 "Modern"
+BrandDescA5.8 "Unique"
+BrandDescA5.9 "Seems like it is everywhere, and I like that"
+BrandDescA5.10 "Exciting"
+BrandDescA5.11 "Has movies I like to watch over and over again"
+BrandDescA5.12 "I'm tired of seeing stuff from this"
+BrandDescA5.13 "Only for males"
+BrandDescA5.14 "Crude"
+BrandDescA5.15 "Annoying"
+BrandDescA5.16 "None of the above".
+
+MRSETS/MDGROUP NAME= $BrandDescA1 LABEL = 'Deadpool' CATEGORYLABELS = VARLABELS VARIABLES= BrandDescA1.1 to BrandDescA1.16 VALUE=1 /DISPLAY NAME=[$BrandDescA1].
+MRSETS/MDGROUP NAME= $BrandDescA2 LABEL = 'Captain America' CATEGORYLABELS = VARLABELS VARIABLES= BrandDescA2.1 to BrandDescA2.16 VALUE=1 /DISPLAY NAME=[$BrandDescA2].
+MRSETS/MDGROUP NAME= $BrandDescA3 LABEL = 'Iron Man' CATEGORYLABELS = VARLABELS VARIABLES= BrandDescA3.1 to BrandDescA3.16 VALUE=1 /DISPLAY NAME=[$BrandDescA3].
+MRSETS/MDGROUP NAME= $BrandDescA4 LABEL = 'Spider-Man' CATEGORYLABELS = VARLABELS VARIABLES= BrandDescA4.1 to BrandDescA4.16 VALUE=1 /DISPLAY NAME=[$BrandDescA4].
+MRSETS/MDGROUP NAME= $BrandDescA5 LABEL = 'Wolverine' CATEGORYLABELS = VARLABELS VARIABLES= BrandDescA5.1 to BrandDescA5.16 VALUE=1 /DISPLAY NAME=[$BrandDescA5].
+
+
+
+*Not Aware
+
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.1 = BrandDesc1.1.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.2 = BrandDesc1.2.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.3 = BrandDesc1.3.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.4 = BrandDesc1.4.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.5 = BrandDesc1.5.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.6 = BrandDesc1.6.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.7 = BrandDesc1.7.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.8 = BrandDesc1.8.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.1 = BrandDesc1.1.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.9 = BrandDesc1.9.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.10 = BrandDesc1.10.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.11 = BrandDesc1.11.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.12 = BrandDesc1.12.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.13 = BrandDesc1.13.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.14 = BrandDesc1.14.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.15 = BrandDesc1.15.
+If (Seen1.3 = 1 OR Seen1.4 = 1) BrandDescAA1.16 = BrandDesc1.16.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.1 = BrandDesc2.1.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.2 = BrandDesc2.2.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.3 = BrandDesc2.3.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.4 = BrandDesc2.4.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.5 = BrandDesc2.5.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.6 = BrandDesc2.6.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.7 = BrandDesc2.7.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.8 = BrandDesc2.8.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.1 = BrandDesc2.1.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.9 = BrandDesc2.9.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.10 = BrandDesc2.10.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.11 = BrandDesc2.11.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.12 = BrandDesc2.12.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.13 = BrandDesc2.13.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.14 = BrandDesc2.14.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.15 = BrandDesc2.15.
+If (Seen2.3 = 1 OR Seen2.4 = 1) BrandDescAA2.16 = BrandDesc2.16.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.1 = BrandDesc3.1.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.2 = BrandDesc3.2.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.3 = BrandDesc3.3.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.4 = BrandDesc3.4.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.5 = BrandDesc3.5.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.6 = BrandDesc3.6.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.7 = BrandDesc3.7.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.8 = BrandDesc3.8.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.1 = BrandDesc3.1.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.9 = BrandDesc3.9.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.10 = BrandDesc3.10.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.11 = BrandDesc3.11.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.12 = BrandDesc3.12.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.13 = BrandDesc3.13.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.14 = BrandDesc3.14.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.15 = BrandDesc3.15.
+If (Seen3.3 = 1 OR Seen3.4 = 1) BrandDescAA3.16 = BrandDesc3.16.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.1 = BrandDesc4.1.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.2 = BrandDesc4.2.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.3 = BrandDesc4.3.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.4 = BrandDesc4.4.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.5 = BrandDesc4.5.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.6 = BrandDesc4.6.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.7 = BrandDesc4.7.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.8 = BrandDesc4.8.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.1 = BrandDesc4.1.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.9 = BrandDesc4.9.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.10 = BrandDesc4.10.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.11 = BrandDesc4.11.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.12 = BrandDesc4.12.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.13 = BrandDesc4.13.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.14 = BrandDesc4.14.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.15 = BrandDesc4.15.
+If (Seen4.3 = 1 OR Seen4.4 = 1) BrandDescAA4.16 = BrandDesc4.16.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.1 = BrandDesc5.1.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.2 = BrandDesc5.2.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.3 = BrandDesc5.3.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.4 = BrandDesc5.4.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.5 = BrandDesc5.5.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.6 = BrandDesc5.6.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.7 = BrandDesc5.7.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.8 = BrandDesc5.8.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.1 = BrandDesc5.1.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.9 = BrandDesc5.9.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.10 = BrandDesc5.10.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.11 = BrandDesc5.11.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.12 = BrandDesc5.12.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.13 = BrandDesc5.13.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.14 = BrandDesc5.14.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.15 = BrandDesc5.15.
+If (Seen5.3 = 1 OR Seen5.4 = 1) BrandDescAA5.16 = BrandDesc5.16.
+
+Var label BrandDescAA1.1 "Has ''big event'' movies"
+BrandDescAA1.2 "Cool"
+BrandDescAA1.3 "Edgy, and I like that"
+BrandDescAA1.4 "Has movies that are fun to watch with others"
+BrandDescAA1.5 "Something I talk about with others"
+BrandDescAA1.6 "Has something for everyone"
+BrandDescAA1.7 "Modern"
+BrandDescAA1.8 "Unique"
+BrandDescAA1.9 "Seems like it is everywhere, and I like that"
+BrandDescAA1.10 "Exciting"
+BrandDescAA1.11 "Has movies I like to watch over and over again"
+BrandDescAA1.12 "I'm tired of seeing stuff from this"
+BrandDescAA1.13 "Only for males"
+BrandDescAA1.14 "Crude"
+BrandDescAA1.15 "Annoying"
+BrandDescAA1.16 "None of the above"
+BrandDescAA2.1 "Has ''big event'' movies"
+BrandDescAA2.2 "Cool"
+BrandDescAA2.3 "Edgy, and I like that"
+BrandDescAA2.4 "Has movies that are fun to watch with others"
+BrandDescAA2.5 "Something I talk about with others"
+BrandDescAA2.6 "Has something for everyone"
+BrandDescAA2.7 "Modern"
+BrandDescAA2.8 "Unique"
+BrandDescAA2.9 "Seems like it is everywhere, and I like that"
+BrandDescAA2.10 "Exciting"
+BrandDescAA2.11 "Has movies I like to watch over and over again"
+BrandDescAA2.12 "I'm tired of seeing stuff from this"
+BrandDescAA2.13 "Only for males"
+BrandDescAA2.14 "Crude"
+BrandDescAA2.15 "Annoying"
+BrandDescAA2.16 "None of the above"
+BrandDescAA3.1 "Has ''big event'' movies"
+BrandDescAA3.2 "Cool"
+BrandDescAA3.3 "Edgy, and I like that"
+BrandDescAA3.4 "Has movies that are fun to watch with others"
+BrandDescAA3.5 "Something I talk about with others"
+BrandDescAA3.6 "Has something for everyone"
+BrandDescAA3.7 "Modern"
+BrandDescAA3.8 "Unique"
+BrandDescAA3.9 "Seems like it is everywhere, and I like that"
+BrandDescAA3.10 "Exciting"
+BrandDescAA3.11 "Has movies I like to watch over and over again"
+BrandDescAA3.12 "I'm tired of seeing stuff from this"
+BrandDescAA3.13 "Only for males"
+BrandDescAA3.14 "Crude"
+BrandDescAA3.15 "Annoying"
+BrandDescAA3.16 "None of the above"
+BrandDescAA4.1 "Has ''big event'' movies"
+BrandDescAA4.2 "Cool"
+BrandDescAA4.3 "Edgy, and I like that"
+BrandDescAA4.4 "Has movies that are fun to watch with others"
+BrandDescAA4.5 "Something I talk about with others"
+BrandDescAA4.6 "Has something for everyone"
+BrandDescAA4.7 "Modern"
+BrandDescAA4.8 "Unique"
+BrandDescAA4.9 "Seems like it is everywhere, and I like that"
+BrandDescAA4.10 "Exciting"
+BrandDescAA4.11 "Has movies I like to watch over and over again"
+BrandDescAA4.12 "I'm tired of seeing stuff from this"
+BrandDescAA4.13 "Only for males"
+BrandDescAA4.14 "Crude"
+BrandDescAA4.15 "Annoying"
+BrandDescAA4.16 "None of the above"
+BrandDescAA5.1 "Has ''big event'' movies"
+BrandDescAA5.2 "Cool"
+BrandDescAA5.3 "Edgy, and I like that"
+BrandDescAA5.4 "Has movies that are fun to watch with others"
+BrandDescAA5.5 "Something I talk about with others"
+BrandDescAA5.6 "Has something for everyone"
+BrandDescAA5.7 "Modern"
+BrandDescAA5.8 "Unique"
+BrandDescAA5.9 "Seems like it is everywhere, and I like that"
+BrandDescAA5.10 "Exciting"
+BrandDescAA5.11 "Has movies I like to watch over and over again"
+BrandDescAA5.12 "I'm tired of seeing stuff from this"
+BrandDescAA5.13 "Only for males"
+BrandDescAA5.14 "Crude"
+BrandDescAA5.15 "Annoying"
+BrandDescAA5.16 "None of the above".
+
+MRSETS/MDGROUP NAME= $BrandDescAA1 LABEL = 'Deadpool' CATEGORYLABELS = VARLABELS VARIABLES= BrandDescAA1.1 to BrandDescAA1.16 VALUE=1 /DISPLAY NAME=[$BrandDescAA1].
+MRSETS/MDGROUP NAME= $BrandDescAA2 LABEL = 'Captain America' CATEGORYLABELS = VARLABELS VARIABLES= BrandDescAA2.1 to BrandDescAA2.16 VALUE=1 /DISPLAY NAME=[$BrandDescAA2].
+MRSETS/MDGROUP NAME= $BrandDescAA3 LABEL = 'Iron Man' CATEGORYLABELS = VARLABELS VARIABLES= BrandDescAA3.1 to BrandDescAA3.16 VALUE=1 /DISPLAY NAME=[$BrandDescAA3].
+MRSETS/MDGROUP NAME= $BrandDescAA4 LABEL = 'Spider-Man' CATEGORYLABELS = VARLABELS VARIABLES= BrandDescAA4.1 to BrandDescAA4.16 VALUE=1 /DISPLAY NAME=[$BrandDescAA4].
+MRSETS/MDGROUP NAME= $BrandDescAA5 LABEL = 'Wolverine' CATEGORYLABELS = VARLABELS VARIABLES= BrandDescAA5.1 to BrandDescAA5.16 VALUE=1 /DISPLAY NAME=[$BrandDescAA5].
+
+
+
+* CharDesc
+
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.1 = CharDesc.1.
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.2 = CharDesc.2.
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.3 = CharDesc.3.
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.4 = CharDesc.4.
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.5 = CharDesc.5.
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.6 = CharDesc.6.
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.7 = CharDesc.7.
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.8 = CharDesc.8.
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.1 = CharDesc.1.
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.9 = CharDesc.9.
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.10 = CharDesc.10.
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.11 = CharDesc.11.
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.12 = CharDesc.12.
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.13 = CharDesc.13.
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.14 = CharDesc.14.
+If (Seen1.1 = 1 OR Seen1.2 = 1) CharDescA.15 = CharDesc.15.
+
+
+MRSETS/MDGROUP NAME= $CharDescA LABEL = 'Below are several words or phrases people have used to describe the character of Deadpool. Which, if any, of the following words and phrases do you think describe the character of Deadpool? Please select all that apply.'
+CATEGORYLABELS = VARLABELS 
+VARIABLES= CharDescA.1 to CharDescA.15
+VALUE=1 
+/DISPLAY NAME=[$CharDescA].
+
+* Not Aware
+
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.1 = CharDesc.1.
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.2 = CharDesc.2.
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.3 = CharDesc.3.
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.4 = CharDesc.4.
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.5 = CharDesc.5.
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.6 = CharDesc.6.
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.7 = CharDesc.7.
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.8 = CharDesc.8.
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.1 = CharDesc.1.
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.9 = CharDesc.9.
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.10 = CharDesc.10.
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.11 = CharDesc.11.
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.12 = CharDesc.12.
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.13 = CharDesc.13.
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.14 = CharDesc.14.
+If (Seen1.1 > 2 OR Seen1.2 > 2) CharDescAA.15 = CharDesc.15.
+
+
+MRSETS/MDGROUP NAME= $CharDescAA LABEL = 'Below are several words or phrases people have used to describe the character of Deadpool. Which, if any, of the following words and phrases do you think describe the character of Deadpool? Please select all that apply.'
+CATEGORYLABELS = VARLABELS 
+VARIABLES= CharDescAA.1 to CharDescAA.15
+VALUE=1 
+/DISPLAY NAME=[$CharDescAA].
+
+
+
+
+
+
+* Redoing Banner point ViewB
+
+*Delete variables ViewB.
+
+*Compute ViewB.1 = 0.
+*Compute ViewB.2 = 0.
+*Compute ViewB.3 = 0.
+*If (DPViewB.1 = 1) ViewB.1 = 1.
+*If (DPViewB.2 = 1) ViewB.2 = 1.
+*If (DPViewB.3 = 1) ViewB.3 = 1.
+*Var Label ViewB.1 "Theatrical" ViewB.2 "HE" ViewB.3 "Non-viewer" .
+*MRSETS
+  /MDGROUP NAME=$ViewB LABEL='Deadpool Viewer Type' CATEGORYLABELS = VARLABELS
+  VARIABLES=ViewB.1 ViewB.2 ViewB.3 VALUE=1
+  /DISPLAY NAME=[$ViewB].
+
+DELETE VARIABLES ViewC.
+
+Compute ViewC.1 = 0.
+Compute ViewC.2 = 0.
+Compute ViewC.3 = 0.
+IF (DPViewA_R.1  = 1 or  DPViewA_R.3 = 1) ViewC.1 = 1.
+IF (DPViewA_R.2  = 1) ViewC.2 = 1.
+IF (DPViewA_R.4  = 1) ViewC.3 = 1.
+
+variable labels ViewC.1 "Theatrical"
+ViewC.2 "HE only"
+ViewC.3 "Non-viewer".
+
+MRSETS
+  /MDGROUP NAME=$ViewC LABEL='Deadpool Viewer Type' CATEGORYLABELS = VARLABELS
+  VARIABLES=ViewC.1 ViewC.2 ViewC.3 VALUE=1
+  /DISPLAY NAME=[$ViewC].
+
+IF(Seen1.1 = 1) ViewTypeC.1=1.
+IF(DPViewA.2 = 1 AND Seen1.1=0) ViewTypeC.2=1.
+IF(DPViewA.4 = 1) ViewTypeC.3 = 1.
+Var Label ViewTypeC.1 Theatrical
+ViewTypeC.2 HE only
+ViewTypeC.3 Non-viewer.
+Freq ViewTypeC.1 to ViewTypeC.3.
+MRSETS
+  /MDGROUP NAME=$ViewTypeC LABEL='Deadpool Viewer Type' CATEGORYLABELS = VARLABELS
+  VARIABLES=ViewTypeC.1 ViewTypeC.2 ViewTypeC.3 VALUE=1
+  /DISPLAY NAME=[$ViewTypeC].
+
+*Banner point addition
+
+If (Gender = 1 and Age < 25) QuadsB = 1.
+If (Gender = 1 and Age >= 25) QuadsB = 2.
+If (Gender = 2 and Age < 25) QuadsB = 3.
+If (Gender = 2 and Age >= 25) QuadsB = 4.
+Var Label QuadsB "<25/25+ quads".
+Val Label QuadsB 1" Male <25" 2 " Male 25+" 3 " Female <25" 4 " Female 25+" .
+
+
+compute ViewD=$sysmis.
+If (Seen1.1 = 1 OR Seen1.2=1) ViewD=1.
+If (Seen1.3 = 1 OR Seen1.4=1) ViewD=2.
+variable labels ViewD "Deadpool Seen".
+Value labels ViewD 1"Seen" 2"Not Seen".
+
+
+compute ViewD_R=$sysmis.
+If (Seen_R1.1 = 1 OR Seen_R1.2=1) ViewD_R=1.
+If (Seen_R1.3 = 1 OR Seen_R1.4=1) ViewD_R=2.
+variable labels ViewD_R "Deadpool Seen (Refield)".
+Value labels ViewD_R 1"Seen" 2"Not Seen".
+
+*Making Seens that are only among Aware.
+
+
+If(CharAware.1 = 1) SeenA1.1 = Seen1.1.
+If(CharAware.1 = 1) SeenA1.2 = Seen1.2.
+If(CharAware.1 = 1) SeenA1.3 = Seen1.3.
+If(CharAware.1 = 1) SeenA1.4 = Seen1.4.
+If (Sum(CharAware.2, CharAware.3, CharAware.4) > 0) SeenA2.1 = Seen2.1.
+If(Sum(CharAware.2, CharAware.3, CharAware.4) > 0) SeenA2.2 = Seen2.2.
+If(Sum(CharAware.2, CharAware.3, CharAware.4) > 0) SeenA2.3 = Seen2.3.
+If(Sum(CharAware.2, CharAware.3, CharAware.4) > 0) SeenA2.4 = Seen2.4.
+If (Sum(CharAware.2, CharAware.3, CharAware.4) > 0) SeenA3.1 = Seen3.1.
+If(Sum(CharAware.2, CharAware.3, CharAware.4) > 0) SeenA3.2 = Seen3.2.
+If(Sum(CharAware.2, CharAware.3, CharAware.4) > 0) SeenA3.3 = Seen3.3.
+If(Sum(CharAware.2, CharAware.3, CharAware.4) > 0) SeenA3.4 = Seen3.4.
+If(CharAware.2 = 1) SeenA4.1 = Seen4.1.
+If(CharAware.2 = 1) SeenA4.2 = Seen4.2.
+If(CharAware.2 = 1) SeenA4.3 = Seen4.3.
+If(CharAware.2 = 1) SeenA4.4 = Seen4.4.
+If(CharAware.2 = 1) SeenA5.1 = Seen5.1.
+If(CharAware.2 = 1) SeenA5.2 = Seen5.2.
+If(CharAware.2 = 1) SeenA5.3 = Seen5.3.
+If(CharAware.2 = 1) SeenA5.4 = Seen5.4.
+If(CharAware.2 = 1) SeenA6.1 = Seen6.1.
+If(CharAware.2 = 1) SeenA6.2 = Seen6.2.
+If(CharAware.2 = 1) SeenA6.3 = Seen6.3.
+If(CharAware.2 = 1) SeenA6.4 = Seen6.4.
+If(CharAware.3 = 1) SeenA7.1 = Seen7.1.
+If(CharAware.3 = 1) SeenA7.2 = Seen7.2.
+If(CharAware.3 = 1) SeenA7.3 = Seen7.3.
+If(CharAware.3 = 1) SeenA7.4 = Seen7.4.
+If(CharAware.3 = 1) SeenA8.1 = Seen8.1.
+If(CharAware.3 = 1) SeenA8.2 = Seen8.2.
+If(CharAware.3 = 1) SeenA8.3 = Seen8.3.
+If(CharAware.3 = 1) SeenA8.4 = Seen8.4.
+If(CharAware.3 = 1) SeenA9.1 = Seen9.1.
+If(CharAware.3 = 1) SeenA9.2 = Seen9.2.
+If(CharAware.3 = 1) SeenA9.3 = Seen9.3.
+If(CharAware.3 = 1) SeenA9.4 = Seen9.4.
+If(CharAware.4 = 1) SeenA10.1 = Seen10.1.
+If(CharAware.4 = 1) SeenA10.2 = Seen10.2.
+If(CharAware.4 = 1) SeenA10.3 = Seen10.3.
+If(CharAware.4 = 1) SeenA10.4 = Seen10.4.
+If(CharAware.4 = 1) SeenA11.1 = Seen11.1.
+If(CharAware.4 = 1) SeenA11.2 = Seen11.2.
+If(CharAware.4 = 1) SeenA11.3 = Seen11.3.
+If(CharAware.4 = 1) SeenA11.4 = Seen11.4.
+If(CharAware.4 = 1) SeenA12.1 = Seen12.1.
+If(CharAware.4 = 1) SeenA12.2 = Seen12.2.
+If(CharAware.4 = 1) SeenA12.3 = Seen12.3.
+If(CharAware.4 = 1) SeenA12.4 = Seen12.4.
+If(CharAware.5 = 1) SeenA13.1 = Seen13.1.
+If(CharAware.5 = 1) SeenA13.2 = Seen13.2.
+If(CharAware.5 = 1) SeenA13.3 = Seen13.3.
+If(CharAware.5 = 1) SeenA13.4 = Seen13.4.
+If(CharAware.5 = 1) SeenA14.1 = Seen14.1.
+If(CharAware.5 = 1) SeenA14.2 = Seen14.2.
+If(CharAware.5 = 1) SeenA14.3 = Seen14.3.
+If(CharAware.5 = 1) SeenA14.4 = Seen14.4.
+If(CharAware.5 = 1) SeenA15.1 = Seen15.1.
+If(CharAware.5 = 1) SeenA15.2 = Seen15.2.
+If(CharAware.5 = 1) SeenA15.3 = Seen15.3.
+If(CharAware.5 = 1) SeenA15.4 = Seen15.4.
+If(CharAware.5 = 1) SeenA16.1 = Seen16.1.
+If(CharAware.5 = 1) SeenA16.2 = Seen16.2.
+If(CharAware.5 = 1) SeenA16.3 = Seen16.3.
+If(CharAware.5 = 1) SeenA16.4 = Seen16.4.
+If(CharAware.5 = 1) SeenA17.1 = Seen17.1.
+If(CharAware.5 = 1) SeenA17.2 = Seen17.2.
+If(CharAware.5 = 1) SeenA17.3 = Seen17.3.
+If(CharAware.5 = 1) SeenA17.4 = Seen17.4.
+If(CharAware.5 = 1) SeenA18.1 = Seen18.1.
+If(CharAware.5 = 1) SeenA18.2 = Seen18.2.
+If(CharAware.5 = 1) SeenA18.3 = Seen18.3.
+If(CharAware.5 = 1) SeenA18.4 = Seen18.4.
+If(CharAware.5 = 1) SeenA19.1 = Seen19.1.
+If(CharAware.5 = 1) SeenA19.2 = Seen19.2.
+If(CharAware.5 = 1) SeenA19.3 = Seen19.3.
+If(CharAware.5 = 1) SeenA19.4 = Seen19.4.
+If(CharAware.5 = 1) SeenA20.1 = Seen20.1.
+If(CharAware.5 = 1) SeenA20.2 = Seen20.2.
+If(CharAware.5 = 1) SeenA20.3 = Seen20.3.
+If(CharAware.5 = 1) SeenA20.4 = Seen20.4.
+If(CharAware.5 = 1) SeenA21.1 = Seen21.1.
+If(CharAware.5 = 1) SeenA21.2 = Seen21.2.
+If(CharAware.5 = 1) SeenA21.3 = Seen21.3.
+If(CharAware.5 = 1) SeenA21.4 = Seen21.4.
+If(CharAware.6 = 1) SeenA22.1 = Seen22.1.
+If(CharAware.6 = 1) SeenA22.2 = Seen22.2.
+If(CharAware.6 = 1) SeenA22.3 = Seen22.3.
+If(CharAware.6 = 1) SeenA22.4 = Seen22.4.
+If(CharAware.6 = 1) SeenA23.1 = Seen23.1.
+If(CharAware.6 = 1) SeenA23.2 = Seen23.2.
+If(CharAware.6 = 1) SeenA23.3 = Seen23.3.
+If(CharAware.6 = 1) SeenA23.4 = Seen23.4.
+If(CharAware.7 = 1) SeenA24.1 = Seen24.1.
+If(CharAware.7 = 1) SeenA24.2 = Seen24.2.
+If(CharAware.7 = 1) SeenA24.3 = Seen24.3.
+If(CharAware.7 = 1) SeenA24.4 = Seen24.4.
+Compute SeenA99.1 = Seen99.1.
+Compute SeenA99.2 = Seen99.2.
+Compute SeenA99.3 = Seen99.3.
+Compute SeenA99.4 = Seen99.4.
+
+Define SeenA()
+!do !i = 1 !to 24
+   Var Labels !concat(SeenA,!i,.1) "Seen in theater" !concat(SeenA,!i,.2) "Seen elsewhere (e.g., on DVD/Blu-ray/streaming)" !concat(SeenA,!i,.3) "Have heard of, but not seen" !concat(SeenA,!i,.4) "Have never heard of".
+!doend
+!EndDefine.
+
+SeenA.
+exe.
+
+Variable Labels SeenA1.1 "Seen in a theater"
+SeenA1.2 "Seen, but not in a theater"
+SeenA1.3 "Have heard of, but not seen"
+SeenA2.1 "Seen in a theater"
+SeenA2.2 "Seen, but not in a theater"
+SeenA2.3 "Have heard of, but not seen"
+SeenA3.1 "Seen in a theater"
+SeenA3.2 "Seen, but not in a theater"
+SeenA3.3 "Have heard of, but not seen"
+SeenA4.1 "Seen in a theater"
+SeenA4.2 "Seen, but not in a theater"
+SeenA4.3 "Have heard of, but not seen"
+SeenA5.1 "Seen in a theater"
+SeenA5.2 "Seen, but not in a theater"
+SeenA5.3 "Have heard of, but not seen"
+SeenA6.1 "Seen in a theater"
+SeenA6.2 "Seen, but not in a theater"
+SeenA6.3 "Have heard of, but not seen"
+SeenA7.1 "Seen in a theater"
+SeenA7.2 "Seen, but not in a theater"
+SeenA7.3 "Have heard of, but not seen"
+SeenA8.1 "Seen in a theater"
+SeenA8.2 "Seen, but not in a theater"
+SeenA8.3 "Have heard of, but not seen"
+SeenA9.1 "Seen in a theater"
+SeenA9.2 "Seen, but not in a theater"
+SeenA9.3 "Have heard of, but not seen"
+SeenA10.1 "Seen in a theater"
+SeenA10.2 "Seen, but not in a theater"
+SeenA10.3 "Have heard of, but not seen"
+SeenA11.1 "Seen in a theater"
+SeenA11.2 "Seen, but not in a theater"
+SeenA11.3 "Have heard of, but not seen"
+SeenA12.1 "Seen in a theater"
+SeenA12.2 "Seen, but not in a theater"
+SeenA12.3 "Have heard of, but not seen"
+SeenA13.1 "Seen in a theater"
+SeenA13.2 "Seen, but not in a theater"
+SeenA13.3 "Have heard of, but not seen"
+SeenA14.1 "Seen in a theater"
+SeenA14.2 "Seen, but not in a theater"
+SeenA14.3 "Have heard of, but not seen"
+SeenA15.1 "Seen in a theater"
+SeenA15.2 "Seen, but not in a theater"
+SeenA15.3 "Have heard of, but not seen"
+SeenA16.1 "Seen in a theater"
+SeenA16.2 "Seen, but not in a theater"
+SeenA16.3 "Have heard of, but not seen"
+SeenA17.1 "Seen in a theater"
+SeenA17.2 "Seen, but not in a theater"
+SeenA17.3 "Have heard of, but not seen"
+SeenA18.1 "Seen in a theater"
+SeenA18.2 "Seen, but not in a theater"
+SeenA18.3 "Have heard of, but not seen"
+SeenA19.1 "Seen in a theater"
+SeenA19.2 "Seen, but not in a theater"
+SeenA19.3 "Have heard of, but not seen"
+SeenA20.1 "Seen in a theater"
+SeenA20.2 "Seen, but not in a theater"
+SeenA20.3 "Have heard of, but not seen"
+SeenA21.1 "Seen in a theater"
+SeenA21.2 "Seen, but not in a theater"
+SeenA21.3 "Have heard of, but not seen"
+SeenA22.1 "Seen in a theater"
+SeenA22.2 "Seen, but not in a theater"
+SeenA22.3 "Have heard of, but not seen"
+SeenA23.1 "Seen in a theater"
+SeenA23.2 "Seen, but not in a theater"
+SeenA23.3 "Have heard of, but not seen"
+SeenA24.1 "Seen in a theater"
+SeenA24.2 "Seen, but not in a theater"
+SeenA24.3 "Have heard of, but not seen"
+SeenA99.1 "Seen in a theater"
+SeenA99.2 "Seen, but not in a theater"
+SeenA99.3 "Have heard of, but not seen".
+
+MRSETS/MDGROUP NAME= $SeenA1 LABEL = 'DEADPOOL (2016)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA1.1 to SeenA1.4 VALUE=1 /DISPLAY NAME=[$SeenA1].
+MRSETS/MDGROUP NAME= $SeenA2 LABEL = 'THE AVENGERS (2012)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA2.1 to SeenA2.4 VALUE=1 /DISPLAY NAME=[$SeenA2].
+MRSETS/MDGROUP NAME= $SeenA3 LABEL = 'AVENGERS: AGE OF ULTRON (2015)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA3.1 to SeenA3.4 VALUE=1 /DISPLAY NAME=[$SeenA3].
+MRSETS/MDGROUP NAME= $SeenA4 LABEL = 'CAPTAIN AMERICA: THE FIRST AVENGER (2011)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA4.1 to SeenA4.4 VALUE=1 /DISPLAY NAME=[$SeenA4].
+MRSETS/MDGROUP NAME= $SeenA5 LABEL = 'CAPTAIN AMERICA: THE WINTER SOLDIER (2014)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA5.1 to SeenA5.4 VALUE=1 /DISPLAY NAME=[$SeenA5].
+MRSETS/MDGROUP NAME= $SeenA6 LABEL = 'CAPTAIN AMERICA: CIVIL WAR (2016)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA6.1 to SeenA6.4 VALUE=1 /DISPLAY NAME=[$SeenA6].
+MRSETS/MDGROUP NAME= $SeenA7 LABEL = 'IRON MAN (2008)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA7.1 to SeenA7.4 VALUE=1 /DISPLAY NAME=[$SeenA7].
+MRSETS/MDGROUP NAME= $SeenA8 LABEL = 'IRON MAN 2 (2010)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA8.1 to SeenA8.4 VALUE=1 /DISPLAY NAME=[$SeenA8].
+MRSETS/MDGROUP NAME= $SeenA9 LABEL = 'IRON MAN 3 (2013)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA9.1 to SeenA9.4 VALUE=1 /DISPLAY NAME=[$SeenA9].
+MRSETS/MDGROUP NAME= $SeenA10 LABEL = 'THE AMAZING SPIDER-MAN (2012)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA10.1 to SeenA10.4 VALUE=1 /DISPLAY NAME=[$SeenA10].
+MRSETS/MDGROUP NAME= $SeenA11 LABEL = 'THE AMAZING SPIDER-MAN 2 (2014)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA11.1 to SeenA11.4 VALUE=1 /DISPLAY NAME=[$SeenA11].
+MRSETS/MDGROUP NAME= $SeenA12 LABEL = 'SPIDER-MAN HOMECOMING (2017)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA12.1 to SeenA12.4 VALUE=1 /DISPLAY NAME=[$SeenA12].
+MRSETS/MDGROUP NAME= $SeenA13 LABEL = 'X-MEN (2000)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA13.1 to SeenA13.4 VALUE=1 /DISPLAY NAME=[$SeenA13].
+MRSETS/MDGROUP NAME= $SeenA14 LABEL = 'X2 (2003)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA14.1 to SeenA14.4 VALUE=1 /DISPLAY NAME=[$SeenA14].
+MRSETS/MDGROUP NAME= $SeenA15 LABEL = 'X-MEN: THE LAST STAND (2006)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA15.1 to SeenA15.4 VALUE=1 /DISPLAY NAME=[$SeenA15].
+MRSETS/MDGROUP NAME= $SeenA16 LABEL = 'X-MEN ORIGINS: WOLVERINE (2009)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA16.1 to SeenA16.4 VALUE=1 /DISPLAY NAME=[$SeenA16].
+MRSETS/MDGROUP NAME= $SeenA17 LABEL = 'X-MEN: FIRST CLASS (2011)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA17.1 to SeenA17.4 VALUE=1 /DISPLAY NAME=[$SeenA17].
+MRSETS/MDGROUP NAME= $SeenA18 LABEL = 'THE WOLVERINE (2013)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA18.1 to SeenA18.4 VALUE=1 /DISPLAY NAME=[$SeenA18].
+MRSETS/MDGROUP NAME= $SeenA19 LABEL = 'X-MEN: DAYS OF FUTURE PAST (2014)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA19.1 to SeenA19.4 VALUE=1 /DISPLAY NAME=[$SeenA19].
+MRSETS/MDGROUP NAME= $SeenA20 LABEL = 'X-MEN: APOCALYPSE (2016)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA20.1 to SeenA20.4 VALUE=1 /DISPLAY NAME=[$SeenA20].
+MRSETS/MDGROUP NAME= $SeenA21 LABEL = 'LOGAN (2017)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA21.1 to SeenA21.4 VALUE=1 /DISPLAY NAME=[$SeenA21].
+MRSETS/MDGROUP NAME= $SeenA22 LABEL = 'GUARDIANS OF THE GALAXY (2014)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA22.1 to SeenA22.4 VALUE=1 /DISPLAY NAME=[$SeenA22].
+MRSETS/MDGROUP NAME= $SeenA23 LABEL = 'GUARDIANS OF THE GALAXY VOL.2 (2017)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA23.1 to SeenA23.4 VALUE=1 /DISPLAY NAME=[$SeenA23].
+MRSETS/MDGROUP NAME= $SeenA24 LABEL = 'SUICIDE SQUAD (2016) ' CATEGORYLABELS = VARLABELS VARIABLES= SeenA24.1 to SeenA24.4 VALUE=1 /DISPLAY NAME=[$SeenA24].
+MRSETS/MDGROUP NAME= $SeenA99 LABEL = 'READY PLAYER ONE (2018)' CATEGORYLABELS = VARLABELS VARIABLES= SeenA99.1 to SeenA99.4 VALUE=1 /DISPLAY NAME=[$SeenA99].
+
+
+*Rename MovInts
+
+Var Label MovInt1 "DEADPOOL 2"
+MovInt2 AVENGERS INFINITY WAR
+MovInt3 NEW MUTANTS
+MovInt4 "X-MEN: DARK PHOENIX"
+MovInt5 "A STAR WARS STORY: UNTITLED HAN SOLO MOVIE"
+MovInt6 "OCEAN'S EIGHT"
+MovInt7 "THE INCREDIBLES 2"
+MovInt8 "JURASSIC WORLD: FALLEN KINGDOM"
+MovInt9 "ANT MAN AND THE WASP".
+
+*Making new Fams that are based to Aware of Each Character
+
+If(CharAware.1 = 1) FamA1 = Fam1.
+If(CharAware.2 = 1) FamA2 = Fam2.
+If(CharAware.3 = 1) FamA3 = Fam3.
+If(CharAware.4 = 1) FamA4 = Fam4.
+If(CharAware.5 = 1) FamA5 = Fam5.
+If(CharAware.6 = 1) FamA6 = Fam6.
+If(CharAware.7 = 1) FamA7 = Fam7.
+
+Var Label FamA1 Deadpool
+FamA2 Captain America
+FamA3 Iron Man
+FamA4 Spider-Man
+FamA5 Wolverine
+FamA6 Star-Lord
+FamA7 Harley Quinn.
+
+Val Labels FamA1 To FamA7 1 Very familiar
+2 Somewhat familiar
+3 Not very familiar
+4 Not at all familiar
+5 "I don't know this character".
+
+*Making new Recogs that are based to Not Aware of Each Character by Name
+
+If(AwareA1 = 2) RecogA.1 = Recog.1.
+If(AwareA2 = 2) RecogA.2 = Recog.2.
+If(AwareA3 = 2) RecogA.3 = Recog.3.
+If(AwareA4 = 2) RecogA.4 = Recog.4.
+If(AwareA5 = 2) RecogA.5 = Recog.5.
+If(AwareA6 = 2) RecogA.6 = Recog.6.
+If(AwareA7 = 2) RecogA.7 = Recog.7.
+
+Var Labels RecogA.1 Deadpool
+RecogA.2 Captain America
+RecogA.3 Iron Man
+RecogA.4 Spider-Man
+RecogA.5 Wolverine
+RecogA.6 Star-Lord
+RecogA.7 Harley Quinn.
+
+Val Labels RecogA.1 To RecogA.7 0 No
+1 Yes.
+
+MRSETS
+  /MDGROUP NAME=$RecogA LABEL='Which of the following characters do you recognize? The images '+
+    'below are taken from classic comic books and are only meant to provide a general idea of what '+
+    'each character looks like.' CATEGORYLABELS=VARLABELS VARIABLES=RecogA.1 RecogA.2 RecogA.3 
+    RecogA.4 RecogA.5 RecogA.6 RecogA.7 VALUE=1
+  /DISPLAY NAME=[$RecogA].
+
+
+*Making Owns that are Seen.1 or Seen.2
+
+If(Seen1.1 = 1 OR Seen1.2 = 1) OwnA.1 = Own.1.
+If(Seen2.1 = 1 OR Seen2.2 = 1) OwnA.2 = Own.2.
+If(Seen3.1 = 1 OR Seen3.2 = 1) OwnA.3 = Own.3.
+If(Seen4.1 = 1 OR Seen4.2 = 1) OwnA.4 = Own.4.
+If(Seen5.1 = 1 OR Seen5.2 = 1) OwnA.5 = Own.5.
+If(Seen6.1 = 1 OR Seen6.2 = 1) OwnA.6 = Own.6.
+If(Seen7.1 = 1 OR Seen7.2 = 1) OwnA.7 = Own.7.
+If(Seen8.1 = 1 OR Seen8.2 = 1) OwnA.8 = Own.8.
+If(Seen9.1 = 1 OR Seen9.2 = 1) OwnA.9 = Own.9.
+If(Seen10.1 = 1 OR Seen10.2 = 1) OwnA.10 = Own.10.
+If(Seen11.1 = 1 OR Seen11.2 = 1) OwnA.11 = Own.11.
+If(Seen12.1 = 1 OR Seen12.2 = 1) OwnA.12 = Own.12.
+If(Seen13.1 = 1 OR Seen13.2 = 1) OwnA.13 = Own.13.
+If(Seen14.1 = 1 OR Seen14.2 = 1) OwnA.14 = Own.14.
+If(Seen15.1 = 1 OR Seen15.2 = 1) OwnA.15 = Own.15.
+If(Seen16.1 = 1 OR Seen16.2 = 1) OwnA.16 = Own.16.
+If(Seen17.1 = 1 OR Seen17.2 = 1) OwnA.17 = Own.17.
+If(Seen18.1 = 1 OR Seen18.2 = 1) OwnA.18 = Own.18.
+If(Seen19.1 = 1 OR Seen19.2 = 1) OwnA.19 = Own.19.
+If(Seen20.1 = 1 OR Seen20.2 = 1) OwnA.20 = Own.20.
+If(Seen21.1 = 1 OR Seen21.2 = 1) OwnA.21 = Own.21.
+If(Seen22.1 = 1 OR Seen22.2 = 1) OwnA.22 = Own.22.
+If(Seen23.1 = 1 OR Seen23.2 = 1) OwnA.23 = Own.23.
+If(Seen24.1 = 1 OR Seen24.2 = 1) OwnA.24 = Own.24.
+If(Seen99.1 = 1 OR Seen99.2 = 1) OwnA.99 = Own.99.
+
+Variable Labels OwnA.1 "DEADPOOL (2016)"
+OwnA.2 "THE AVENGERS (2012)"
+OwnA.3 "AVENGERS: AGE OF ULTRON (2015)"
+OwnA.4 "CAPTAIN AMERICA: THE FIRST AVENGER (2011)"
+OwnA.5 "CAPTAIN AMERICA: THE WINTER SOLDIER (2014)"
+OwnA.6 "CAPTAIN AMERICA: CIVIL WAR (2016)"
+OwnA.7 "IRON MAN (2008)"
+OwnA.8 "IRON MAN 2 (2010)"
+OwnA.9 "IRON MAN 3 (2013)"
+OwnA.10 "THE AMAZING SPIDER-MAN (2012)"
+OwnA.11 "THE AMAZING SPIDER-MAN 2 (2014)"
+OwnA.12 "SPIDER-MAN HOMECOMING (2017)"
+OwnA.13 "X-MEN (2000)"
+OwnA.14 "X2 (2003)"
+OwnA.15 "X-MEN: THE LAST STAND (2006)"
+OwnA.16 "X-MEN ORIGINS: WOLVERINE (2009)"
+OwnA.17 "X-MEN: FIRST CLASS (2011)"
+OwnA.18 "THE WOLVERINE (2013)"
+OwnA.19 "X-MEN: DAYS OF FUTURE PAST (2014)"
+OwnA.20 "X-MEN: APOCALYPSE (2016)"
+OwnA.21 "LOGAN (2017)"
+OwnA.22 "GUARDIANS OF THE GALAXY (2014)"
+OwnA.23 "GUARDIANS OF THE GALAXY VOL.2 (2017)"
+OwnA.24 "SUICIDE SQUAD (2016)"
+OwnA.99 "READY PLAYER ONE (2018)".
+
+MRSETS
+/MDGROUP NAME= $OwnA LABEL = 'Which, if any, of the following movies do you own (either on DVD, Blu-Ray or a download version like iTunes)? Please select all that apply.'
+CATEGORYLABELS = VARLABELS VARIABLES= OwnA.1 to OwnA.99 VALUE=1 
+/DISPLAY NAME=[$OwnA].
+
+
+* Making Rate rebased to Seen Theatrically
+
+If(Seen1.1 = 1) RateA1 = Rate1.
+If(Seen2.1 = 1) RateA2 = Rate2.
+If(Seen3.1 = 1) RateA3 = Rate3.
+If(Seen4.1 = 1) RateA4 = Rate4.
+If(Seen5.1 = 1) RateA5 = Rate5.
+If(Seen6.1 = 1) RateA6 = Rate6.
+If(Seen7.1 = 1) RateA7 = Rate7.
+If(Seen8.1 = 1) RateA8 = Rate8.
+If(Seen9.1 = 1) RateA9 = Rate9.
+If(Seen10.1 = 1) RateA10 = Rate10.
+If(Seen11.1 = 1) RateA11 = Rate11.
+If(Seen12.1 = 1) RateA12 = Rate12.
+If(Seen13.1 = 1) RateA13 = Rate13.
+If(Seen14.1 = 1) RateA14 = Rate14.
+If(Seen15.1 = 1) RateA15 = Rate15.
+If(Seen16.1 = 1) RateA16 = Rate16.
+If(Seen17.1 = 1) RateA17 = Rate17.
+If(Seen18.1 = 1) RateA18 = Rate18.
+If(Seen19.1 = 1) RateA19 = Rate19.
+If(Seen20.1 = 1) RateA20 = Rate20.
+If(Seen21.1 = 1) RateA21 = Rate21.
+If(Seen22.1 = 1) RateA22 = Rate22.
+If(Seen23.1 = 1) RateA23 = Rate23.
+If(Seen24.1 = 1) RateA24 = Rate24.
+If(Seen99.1 = 1) RateA99 = Rate99.
+
+Var Label RateA1 "DEADPOOL (2016)"
+RateA2 "THE AVENGERS (2012)"
+RateA3 "AVENGERS: AGE OF ULTRON (2015)"
+RateA4 "CAPTAIN AMERICA: THE FIRST AVENGER (2011)"
+RateA5 "CAPTAIN AMERICA: THE WINTER SOLDIER (2014)"
+RateA6 "CAPTAIN AMERICA: CIVIL WAR (2016)"
+RateA7 "IRON MAN (2008)"
+RateA8 "IRON MAN 2 (2010)"
+RateA9 "IRON MAN 3 (2013)"
+RateA10 "THE AMAZING SPIDER-MAN (2012)"
+RateA11 "THE AMAZING SPIDER-MAN 2 (2014)"
+RateA12 "SPIDER-MAN HOMECOMING (2017)"
+RateA13 "X-MEN (2000)"
+RateA14 "X2 (2003)"
+RateA15 "X-MEN: THE LAST STAND (2006)"
+RateA16 "X-MEN ORIGINS: WOLVERINE (2009)"
+RateA17 "X-MEN: FIRST CLASS (2011)"
+RateA18 "THE WOLVERINE (2013)"
+RateA19 "X-MEN: DAYS OF FUTURE PAST (2014)"
+RateA20 "X-MEN: APOCALYPSE (2016)"
+RateA21 "LOGAN (2017)"
+RateA22 "GUARDIANS OF THE GALAXY (2014)"
+RateA23 "GUARDIANS OF THE GALAXY VOL.2 (2017)"
+RateA24 "SUICIDE SQUAD (2016)"
+RateA99 "READY PLAYER ONE (2018)".
+
+Val Labels RateA1 To RateA99 1 Excellent
+2 Very Good
+3 Good
+4 Fair
+5 Poor.
+
+
+* Making Rate rebased to Seen ElseWhere
+
+If(Seen1.2 = 1) RateB1 = Rate1.
+If(Seen2.2 = 1) RateB2 = Rate2.
+If(Seen3.2 = 1) RateB3 = Rate3.
+If(Seen4.2 = 1) RateB4 = Rate4.
+If(Seen5.2 = 1) RateB5 = Rate5.
+If(Seen6.2 = 1) RateB6 = Rate6.
+If(Seen7.2 = 1) RateB7 = Rate7.
+If(Seen8.2 = 1) RateB8 = Rate8.
+If(Seen9.2 = 1) RateB9 = Rate9.
+If(Seen10.2 = 1) RateB10 = Rate10.
+If(Seen11.2 = 1) RateB11 = Rate11.
+If(Seen12.2 = 1) RateB12 = Rate12.
+If(Seen13.2 = 1) RateB13 = Rate13.
+If(Seen14.2 = 1) RateB14 = Rate14.
+If(Seen15.2 = 1) RateB15 = Rate15.
+If(Seen16.2 = 1) RateB16 = Rate16.
+If(Seen17.2 = 1) RateB17 = Rate17.
+If(Seen18.2 = 1) RateB18 = Rate18.
+If(Seen19.2 = 1) RateB19 = Rate19.
+If(Seen20.2 = 1) RateB20 = Rate20.
+If(Seen21.2 = 1) RateB21 = Rate21.
+If(Seen22.2 = 1) RateB22 = Rate22.
+If(Seen23.2 = 1) RateB23 = Rate23.
+If(Seen24.2 = 1) RateB24 = Rate24.
+If(Seen99.2 = 1) RateB99 = Rate99.
+
+Var Label RateB1 "DEADPOOL (2016)"
+RateB2 "THE AVENGERS (2012)"
+RateB3 "AVENGERS: AGE OF ULTRON (2015)"
+RateB4 "CAPTAIN AMERICA: THE FIRST AVENGER (2011)"
+RateB5 "CAPTAIN AMERICA: THE WINTER SOLDIER (2014)"
+RateB6 "CAPTAIN AMERICA: CIVIL WAR (2016)"
+RateB7 "IRON MAN (2008)"
+RateB8 "IRON MAN 2 (2010)"
+RateB9 "IRON MAN 3 (2013)"
+RateB10 "THE AMAZING SPIDER-MAN (2012)"
+RateB11 "THE AMAZING SPIDER-MAN 2 (2014)"
+RateB12 "SPIDER-MAN HOMECOMING (2017)"
+RateB13 "X-MEN (2000)"
+RateB14 "X2 (2003)"
+RateB15 "X-MEN: THE LAST STAND (2006)"
+RateB16 "X-MEN ORIGINS: WOLVERINE (2009)"
+RateB17 "X-MEN: FIRST CLASS (2011)"
+RateB18 "THE WOLVERINE (2013)"
+RateB19 "X-MEN: DAYS OF FUTURE PAST (2014)"
+RateB20 "X-MEN: APOCALYPSE (2016)"
+RateB21 "LOGAN (2017)"
+RateB22 "GUARDIANS OF THE GALAXY (2014)"
+RateB23 "GUARDIANS OF THE GALAXY VOL.2 (2017)"
+RateB24 "SUICIDE SQUAD (2016)"
+RateB99 "READY PLAYER ONE (2018)".
+
+Val Labels RateB1 To RateB99 1 Excellent
+2 Very Good
+3 Good
+4 Fair
+5 Poor.
+
+var labels Rescaled1 "VULGAR HUMOR".	
+var labels Rescaled2 "PHYSICAL HUMOR".	
+var labels Rescaled3 "VERBAL HUMOR".	
+var labels Rescaled4 "POP CULTURE".	
+var labels Rescaled5 "RANDOM HUMOR".	
+var labels Rescaled6 "FOURTH WALL".	
+var labels Rescaled7 "POWERS".	
+var labels Rescaled8 "SPECTACLE".	
+var labels Rescaled9 "NEW CHARACTERS".	
+var labels Rescaled10 "WADE".	
+var labels Rescaled11 "SOFT".	
+var labels Rescaled12 "VIOLENCE".	
+
+* Deadpool Seen (ViewD) for banner
+
+compute ViewD=$sysmis.
+If(Seen1.1 =1 or Seen1.2=1) ViewD=1.
+If(Seen1.3 =1 or Seen1.4=1) ViewD=2.
+variable labels ViewD "Deadpool Seen".
+value labels ViewD 1"Seen" 2"Not Seen".
+
+
+*Save
+
+***REFIELD EDITS.
+
+compute Overall = 1.
+Format Overall (F1.0).
+var label Overall "Overall".
+Freq Status Overall.
+
+compute Weight = 1.
+Format Weight (F9.8).
+var label Weight "Weight".
+Freq Weight.
+
+
+Compute OwnDP = 2.
+if (Own_R.1 = 1)  OwnDP = 1.
+if (Own_R.1 = 0)  OwnDP = 2. 
+
+var label OwnDP "Deadpool HE Ownership".
+val label OwnDP
+1 "Owner"
+2 "Non-owner"
+.
+RECODE  SeenB_R.1 (1=1)(else=0) INTO SBR1.
+
+RECODE DPViewA_R.1 to DPViewA_R.4 (else=sysmis).
+DO IF refield = 1.
+compute DPViewA_R.1=0.
+compute DPViewA_R.2=0.
+compute DPViewA_R.3=0.
+compute DPViewA_R.4=0.
+If (Seen_R1.1=1 and (Seen_R1.2=0 AND  SBR1=0))  DPViewA_R.1 = 1.
+If (Seen_R1.2=1 and Seen_R1.1=0 )  DPViewA_R.2 = 1.
+If (Seen_R1.1=1 and (Seen_R1.2=1 or SeenB_R.1=1)) DPViewA_R.3 = 1.
+If (Seen_R1.3=1 or Seen_R1.4=1 )  DPViewA_R.4 = 1.
+END IF.
+
+variable labels 
+ DPViewA_R.1 "Theatrical only viewer"
+ DPViewA_R.2 "Home Entertainment only viewer"
+ DPViewA_R.3 "Theatrical and Home Entertainment viewer"
+ DPViewA_R.4 "Non-viewer".
+
+MRSETS
+/MDGROUP NAME= $DPViewA_R LABEL = 'DEADPOOL VIEWERSHIP' CATEGORYLABELS = VARLABELS  VARIABLES=  DPViewA_R.1 to  DPViewA_R.4 VALUE=1 
+/DISPLAY NAME=[$DPViewA_R].
+ * freq DPViewA_R.1 to DPViewA_R.4.
+ * freq refield.
+
+
+Compute ViewA = $sysmis.
+if (DPViewA_R.1 = 1)  ViewA = 1.
+if (DPViewA_R.2 = 1)  ViewA = 2.
+if (DPViewA_R.3 = 1)  ViewA = 3.
+if (DPViewA_R.4 = 1)  ViewA = 4.
+
+var label ViewA "Deadpool Viewer Type".
+val label ViewA
+1 "Theatrical only"
+2 "HE only"
+3 "Theatrical and HE"
+4 "Non-viewer".
+exe.
+freq ViewA DPViewA_R.1 to DPViewA_R.4.
+
+Define Seen_RA()
+!do !i = 1 !to 24
+   !do !j = 1 !to 3
+      If(!concat(Seen_R,!i,.4) = 0) !concat(Seen_RA,!i,.,!j) = !concat(Seen_R,!i,.,!j).
+   !doend
+   Var Labels !concat(Seen_RA,!i,.1) "Seen in theater" !concat(Seen_RA,!i,.2) "Seen elsewhere (e.g., on DVD/Blu-ray/streaming)" !concat(Seen_RA,!i,.3) "Have heard of, but not seen".
+!doend
+!EndDefine.
+
+Seen_RA.
+exe.
+
+MRSETS /MDGROUP NAME= $Seen_RA1 LABEL = 'DEADPOOL (2016)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA1.1 to  Seen_RA1.3 VALUE=1 /DISPLAY NAME=[$Seen_RA1].
+MRSETS /MDGROUP NAME= $Seen_RA2 LABEL = 'THE AVENGERS (2012)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA2.1 to  Seen_RA2.3 VALUE=1 /DISPLAY NAME=[$Seen_RA2].
+MRSETS /MDGROUP NAME= $Seen_RA3 LABEL = 'AVENGERS: AGE OF ULTRON (2015)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA3.1 to  Seen_RA3.3 VALUE=1 /DISPLAY NAME=[$Seen_RA3].
+MRSETS /MDGROUP NAME= $Seen_RA4 LABEL = 'CAPTAIN AMERICA: THE FIRST AVENGER (2011)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA4.1 to  Seen_RA4.3 VALUE=1 /DISPLAY NAME=[$Seen_RA4].
+MRSETS /MDGROUP NAME= $Seen_RA5 LABEL = 'CAPTAIN AMERICA: THE WINTER SOLDIER (2014)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA5.1 to  Seen_RA5.3 VALUE=1 /DISPLAY NAME=[$Seen_RA5].
+MRSETS /MDGROUP NAME= $Seen_RA6 LABEL = 'CAPTAIN AMERICA: CIVIL WAR (2016)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA6.1 to  Seen_RA6.3 VALUE=1 /DISPLAY NAME=[$Seen_RA6].
+MRSETS /MDGROUP NAME= $Seen_RA7 LABEL = 'IRON MAN (2008)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA7.1 to  Seen_RA7.3 VALUE=1 /DISPLAY NAME=[$Seen_RA7].
+MRSETS /MDGROUP NAME= $Seen_RA8 LABEL = 'IRON MAN 2 (2010)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA8.1 to  Seen_RA8.3 VALUE=1 /DISPLAY NAME=[$Seen_RA8].
+MRSETS /MDGROUP NAME= $Seen_RA9 LABEL = 'IRON MAN 3 (2013)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA9.1 to  Seen_RA9.3 VALUE=1 /DISPLAY NAME=[$Seen_RA9].
+MRSETS /MDGROUP NAME= $Seen_RA10 LABEL = 'THE AMAZING SPIDER-MAN (2012)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA10.1 to  Seen_RA10.3 VALUE=1 /DISPLAY NAME=[$Seen_RA10].
+MRSETS /MDGROUP NAME= $Seen_RA11 LABEL = 'THE AMAZING SPIDER-MAN 2 (2014)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA11.1 to  Seen_RA11.3 VALUE=1 /DISPLAY NAME=[$Seen_RA11].
+MRSETS /MDGROUP NAME= $Seen_RA12 LABEL = 'SPIDER-MAN HOMECOMING (2017)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA12.1 to  Seen_RA12.3 VALUE=1 /DISPLAY NAME=[$Seen_RA12].
+MRSETS /MDGROUP NAME= $Seen_RA13 LABEL = 'X-MEN (2000)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA13.1 to  Seen_RA13.3 VALUE=1 /DISPLAY NAME=[$Seen_RA13].
+MRSETS /MDGROUP NAME= $Seen_RA14 LABEL = 'X2 (2003)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA14.1 to  Seen_RA14.3 VALUE=1 /DISPLAY NAME=[$Seen_RA14].
+MRSETS /MDGROUP NAME= $Seen_RA15 LABEL = 'X-MEN: THE LAST STAND (2006)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA15.1 to  Seen_RA15.3 VALUE=1 /DISPLAY NAME=[$Seen_RA15].
+MRSETS /MDGROUP NAME= $Seen_RA16 LABEL = 'X-MEN ORIGINS: WOLVERINE (2009)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA16.1 to  Seen_RA16.3 VALUE=1 /DISPLAY NAME=[$Seen_RA16].
+MRSETS /MDGROUP NAME= $Seen_RA17 LABEL = 'X-MEN: FIRST CLASS (2011)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA17.1 to  Seen_RA17.3 VALUE=1 /DISPLAY NAME=[$Seen_RA17].
+MRSETS /MDGROUP NAME= $Seen_RA18 LABEL = 'THE WOLVERINE (2013)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA18.1 to  Seen_RA18.3 VALUE=1 /DISPLAY NAME=[$Seen_RA18].
+MRSETS /MDGROUP NAME= $Seen_RA19 LABEL = 'X-MEN: DAYS OF FUTURE PAST (2014)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA19.1 to  Seen_RA19.3 VALUE=1 /DISPLAY NAME=[$Seen_RA19].
+MRSETS /MDGROUP NAME= $Seen_RA20 LABEL = 'X-MEN: APOCALYPSE (2016)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA20.1 to  Seen_RA20.3 VALUE=1 /DISPLAY NAME=[$Seen_RA20].
+MRSETS /MDGROUP NAME= $Seen_RA21 LABEL = 'LOGAN (2017)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA21.1 to  Seen_RA21.3 VALUE=1 /DISPLAY NAME=[$Seen_RA21].
+MRSETS /MDGROUP NAME= $Seen_RA22 LABEL = 'GUARDIANS OF THE GALAXY (2014)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA22.1 to  Seen_RA22.3 VALUE=1 /DISPLAY NAME=[$Seen_RA22].
+MRSETS /MDGROUP NAME= $Seen_RA23 LABEL = 'GUARDIANS OF THE GALAXY VOL.2 (2017)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA23.1 to  Seen_RA23.3 VALUE=1 /DISPLAY NAME=[$Seen_RA23].
+MRSETS /MDGROUP NAME= $Seen_RA24 LABEL = 'SUICIDE SQUAD (2016)' CATEGORYLABELS = VARLABELS  VARIABLES=  Seen_RA24.1 to  Seen_RA24.3 VALUE=1 /DISPLAY NAME=[$Seen_RA24].
+
+Define SeenB()
+!do !i = 1 !to 24
+      If((!concat(Seen_R,!i,.1) = 1 AND !concat(Seen_R,!i,.2) = 1) OR (!concat(SeenB_R.,!i) = 1)) !concat(SeenX,!i) = 1.
+!doend
+!do !i = 1 !to 24
+      If((!concat(Seen_R,!i,.2) = 1) OR (!concat(SeenB_R.,!i) = 1)) !concat(SeenY,!i) = 1.
+!doend
+!EndDefine.
+
+SeenB.
+exe.
+
+Var Labels
+SeenX1 "DEADPOOL (2016)"
+SeenX2 "THE AVENGERS (2012)"
+SeenX3 "AVENGERS: AGE OF ULTRON (2015)"
+SeenX4 "CAPTAIN AMERICA: THE FIRST AVENGER (2011)"
+SeenX5 "CAPTAIN AMERICA: THE WINTER SOLDIER (2014)"
+SeenX6 "CAPTAIN AMERICA: CIVIL WAR (2016)"
+SeenX7 "IRON MAN (2008)"
+SeenX8 "IRON MAN 2 (2010)"
+SeenX9 "IRON MAN 3 (2013)"
+SeenX10 "THE AMAZING SPIDER-MAN (2012)"
+SeenX11 "THE AMAZING SPIDER-MAN 2 (2014)"
+SeenX12 "SPIDER-MAN HOMECOMING (2017)"
+SeenX13 "X-MEN (2000)"
+SeenX14 "X2 (2003)"
+SeenX15 "X-MEN: THE LAST STAND (2006)"
+SeenX16 "X-MEN ORIGINS: WOLVERINE (2009)"
+SeenX17 "X-MEN: FIRST CLASS (2011)"
+SeenX18 "THE WOLVERINE (2013)"
+SeenX19 "X-MEN: DAYS OF FUTURE PAST (2014)"
+SeenX20 "X-MEN: APOCALYPSE (2016)"
+SeenX21 "LOGAN (2017)"
+SeenX22 "GUARDIANS OF THE GALAXY (2014)"
+SeenX23 "GUARDIANS OF THE GALAXY VOL2 (2017)"
+SeenX24 "SUICIDE SQUAD (2016)"
+SeenY1 "DEADPOOL (2016)"
+SeenY2 "THE AVENGERS (2012)"
+SeenY3 "AVENGERS: AGE OF ULTRON (2015)"
+SeenY4 "CAPTAIN AMERICA: THE FIRST AVENGER (2011)"
+SeenY5 "CAPTAIN AMERICA: THE WINTER SOLDIER (2014)"
+SeenY6 "CAPTAIN AMERICA: CIVIL WAR (2016)"
+SeenY7 "IRON MAN (2008)"
+SeenY8 "IRON MAN 2 (2010)"
+SeenY9 "IRON MAN 3 (2013)"
+SeenY10 "THE AMAZING SPIDER-MAN (2012)"
+SeenY11 "THE AMAZING SPIDER-MAN 2 (2014)"
+SeenY12 "SPIDER-MAN HOMECOMING (2017)"
+SeenY13 "X-MEN (2000)"
+SeenY14 "X2 (2003)"
+SeenY15 "X-MEN: THE LAST STAND (2006)"
+SeenY16 "X-MEN ORIGINS: WOLVERINE (2009)"
+SeenY17 "X-MEN: FIRST CLASS (2011)"
+SeenY18 "THE WOLVERINE (2013)"
+SeenY19 "X-MEN: DAYS OF FUTURE PAST (2014)"
+SeenY20 "X-MEN: APOCALYPSE (2016)"
+SeenY21 "LOGAN (2017)"
+SeenY22 "GUARDIANS OF THE GALAXY (2014)"
+SeenY23 "GUARDIANS OF THE GALAXY VOL2 (2017)"
+SeenY24 "SUICIDE SQUAD (2016)"
+.
+
+Freq Seen_R2.2 SeenB_R.2.
+Freq SeenY2.
+Freq Seen_R1.1 SeenA_R1.1.
+
+MRSETS
+  /MDGROUP NAME=$SeenY LABEL='Among Seen in Theater ' CATEGORYLABELS=VARLABELS 
+    VARIABLES=SeenY1 SeenY2 SeenY3 SeenY4 SeenY5 SeenY6 SeenY7 SeenY8 SeenY9 SeenY10 SeenY11 SeenY12 
+    SeenY13 SeenY14 SeenY15 SeenY16 SeenY17 SeenY18 SeenY19 SeenY20 SeenY21 SeenY22 SeenY23 SeenY24 
+    VALUE=1
+  /MDGROUP NAME=$SeenX LABEL='Among Seen in Theater And Seen Elsewhere' CATEGORYLABELS=VARLABELS VARIABLES=SeenX1 SeenX2 
+    SeenX3 SeenX4 SeenX5 SeenX6 SeenX7 SeenX8 SeenX9 SeenX10 SeenX11 SeenX12 SeenX13 SeenX14 SeenX15 
+    SeenX16 SeenX17 SeenX18 SeenX19 SeenX20 SeenX21 SeenX22 SeenX23 SeenX24 VALUE=1
+  /DISPLAY NAME=[$SeenY $SeenX].
+
+Define SeenM()
+!do !i = 1 !to 24
+   !do !j = 1 !to 4
+      If(!concat(Refield)= 0) !concat(SeenM,!i,.,!j) = !concat(Seen,!i,.,!j).
+      If(!concat(Refield)= 1) !concat(SeenM,!i,.,!j) = !concat(Seen_R,!i,.,!j).
+ !doend
+    If(!concat(SeenB_R,.,!i)= 1) !concat(SeenM,!i,.2) = 1. 
+    If(!concat(SeenM,!i,.,1)= 1 | !concat(SeenM,!i,.,2)= 1) !concat(SeenM,!i,.5) = 1.
+   Var Labels !concat(SeenM,!i,.1) "Seen in theater" !concat(SeenM,!i,.2) "Seen elsewhere (e.g., on DVD/Blu-ray/streaming)"
+   !concat(SeenM,!i,.3) "Have heard of, but not seen" !concat(SeenM,!i,.4) "Have never heard of" !concat(SeenM,!i,.5) "Seen anywhere".
+!doend
+!EndDefine.
+SeenM
+exe.
+MRSETS /MDGROUP NAME= $SeenM1 LABEL = 'DEADPOOL (2016)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM1.1 to  SeenM1.5 VALUE=1 /DISPLAY NAME=[$SeenM1].
+MRSETS /MDGROUP NAME= $SeenM2 LABEL = 'THE AVENGERS (2012)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM2.1 to  SeenM2.5 VALUE=1 /DISPLAY NAME=[$SeenM2].
+MRSETS /MDGROUP NAME= $SeenM3 LABEL = 'AVENGERS: AGE OF ULTRON (2015)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM3.1 to  SeenM3.5 VALUE=1 /DISPLAY NAME=[$SeenM3].
+MRSETS /MDGROUP NAME= $SeenM4 LABEL = 'CAPTAIN AMERICA: THE FIRST AVENGER (2011)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM4.1 to  SeenM4.5 VALUE=1 /DISPLAY NAME=[$SeenM4].
+MRSETS /MDGROUP NAME= $SeenM5 LABEL = 'CAPTAIN AMERICA: THE WINTER SOLDIER (2014)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM5.1 to  SeenM5.5 VALUE=1 /DISPLAY NAME=[$SeenM5].
+MRSETS /MDGROUP NAME= $SeenM6 LABEL = 'CAPTAIN AMERICA: CIVIL WAR (2016)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM6.1 to  SeenM6.5 VALUE=1 /DISPLAY NAME=[$SeenM6].
+MRSETS /MDGROUP NAME= $SeenM7 LABEL = 'IRON MAN (2008)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM7.1 to  SeenM7.5 VALUE=1 /DISPLAY NAME=[$SeenM7].
+MRSETS /MDGROUP NAME= $SeenM8 LABEL = 'IRON MAN 2 (2010)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM8.1 to  SeenM8.5 VALUE=1 /DISPLAY NAME=[$SeenM8].
+MRSETS /MDGROUP NAME= $SeenM9 LABEL = 'IRON MAN 3 (2013)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM9.1 to  SeenM9.5 VALUE=1 /DISPLAY NAME=[$SeenM9].
+MRSETS /MDGROUP NAME= $SeenM10 LABEL = 'THE AMAZING SPIDER-MAN (2012)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM10.1 to  SeenM10.5 VALUE=1 /DISPLAY NAME=[$SeenM10].
+MRSETS /MDGROUP NAME= $SeenM11 LABEL = 'THE AMAZING SPIDER-MAN 2 (2014)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM11.1 to  SeenM11.5 VALUE=1 /DISPLAY NAME=[$SeenM11].
+MRSETS /MDGROUP NAME= $SeenM12 LABEL = 'SPIDER-MAN HOMECOMING (2017)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM12.1 to  SeenM12.5 VALUE=1 /DISPLAY NAME=[$SeenM12].
+MRSETS /MDGROUP NAME= $SeenM13 LABEL = 'X-MEN (2000)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM13.1 to  SeenM13.5 VALUE=1 /DISPLAY NAME=[$SeenM13].
+MRSETS /MDGROUP NAME= $SeenM14 LABEL = 'X2 (2003)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM14.1 to  SeenM14.5 VALUE=1 /DISPLAY NAME=[$SeenM14].
+MRSETS /MDGROUP NAME= $SeenM15 LABEL = 'X-MEN: THE LAST STAND (2006)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM15.1 to  SeenM15.5 VALUE=1 /DISPLAY NAME=[$SeenM15].
+MRSETS /MDGROUP NAME= $SeenM16 LABEL = 'X-MEN ORIGINS: WOLVERINE (2009)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM16.1 to  SeenM16.5 VALUE=1 /DISPLAY NAME=[$SeenM16].
+MRSETS /MDGROUP NAME= $SeenM17 LABEL = 'X-MEN: FIRST CLASS (2011)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM17.1 to  SeenM17.5 VALUE=1 /DISPLAY NAME=[$SeenM17].
+MRSETS /MDGROUP NAME= $SeenM18 LABEL = 'THE WOLVERINE (2013)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM18.1 to  SeenM18.5 VALUE=1 /DISPLAY NAME=[$SeenM18].
+MRSETS /MDGROUP NAME= $SeenM19 LABEL = 'X-MEN: DAYS OF FUTURE PAST (2014)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM19.1 to  SeenM19.5 VALUE=1 /DISPLAY NAME=[$SeenM19].
+MRSETS /MDGROUP NAME= $SeenM20 LABEL = 'X-MEN: APOCALYPSE (2016)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM20.1 to  SeenM20.5 VALUE=1 /DISPLAY NAME=[$SeenM20].
+MRSETS /MDGROUP NAME= $SeenM21 LABEL = 'LOGAN (2017)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM21.1 to  SeenM21.5 VALUE=1 /DISPLAY NAME=[$SeenM21].
+MRSETS /MDGROUP NAME= $SeenM22 LABEL = 'GUARDIANS OF THE GALAXY (2014)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM22.1 to  SeenM22.5 VALUE=1 /DISPLAY NAME=[$SeenM22].
+MRSETS /MDGROUP NAME= $SeenM23 LABEL = 'GUARDIANS OF THE GALAXY VOL.2 (2017)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM23.1 to  SeenM23.5 VALUE=1 /DISPLAY NAME=[$SeenM23].
+MRSETS /MDGROUP NAME= $SeenM24 LABEL = 'SUICIDE SQUAD (2016)' CATEGORYLABELS = VARLABELS  VARIABLES=  SeenM24.1 to  SeenM24.5 VALUE=1 /DISPLAY NAME=[$SeenM24].
+
+
+Define DeadtimeM()
+!do !i = 1 !to 24
+      If(!concat(Refield)= 0) !concat(DeadtimeB_M,!i) = !concat(DeadTimeB,!i).
+      If(!concat(Refield)= 1) !concat(DeadtimeB_M,!i) = !concat(DeadTimeB_R,!i).
+      val labels !concat(DeadtimeB_M,!i) 1 "Once" 2 "Twice" 3 "Three times" 4"Four or more times" 5 "Don't remember".
+!doend
+!EndDefine.
+DeadtimeM.
+exe.
+
+Var Labels
+DeadTimeB_M1 "DEADPOOL (2016)"
+DeadTimeB_M2 "THE AVENGERS (2012)"
+DeadTimeB_M3 "AVENGERS: AGE OF ULTRON (2015)"
+DeadTimeB_M4 "CAPTAIN AMERICA: THE FIRST AVENGER (2011)"
+DeadTimeB_M5 "CAPTAIN AMERICA: THE WINTER SOLDIER (2014)"
+DeadTimeB_M6 "CAPTAIN AMERICA: CIVIL WAR (2016)"
+DeadTimeB_M7 "IRON MAN (2008)"
+DeadTimeB_M8 "IRON MAN 2 (2010)"
+DeadTimeB_M9 "IRON MAN 3 (2013)"
+DeadTimeB_M10 "THE AMAZING SPIDER-MAN (2012)"
+DeadTimeB_M11 "THE AMAZING SPIDER-MAN 2 (2014)"
+DeadTimeB_M12 "SPIDER-MAN HOMECOMING (2017)"
+DeadTimeB_M13 "X-MEN (2000)"
+DeadTimeB_M14 "X2 (2003)"
+DeadTimeB_M15 "X-MEN: THE LAST STAND (2006)"
+DeadTimeB_M16 "X-MEN ORIGINS: WOLVERINE (2009)"
+DeadTimeB_M17 "X-MEN: FIRST CLASS (2011)"
+DeadTimeB_M18 "THE WOLVERINE (2013)"
+DeadTimeB_M19 "X-MEN: DAYS OF FUTURE PAST (2014)"
+DeadTimeB_M20 "X-MEN: APOCALYPSE (2016)"
+DeadTimeB_M21 "LOGAN (2017)"
+DeadTimeB_M22 "GUARDIANS OF THE GALAXY (2014)"
+DeadTimeB_M23 "GUARDIANS OF THE GALAXY VOL2 (2017)"
+DeadTimeB_M24 "SUICIDE SQUAD (2016)".
+
+RECODE DPViewA_M1 to DPViewA_M4  DPViewB_M1 to DPViewB_M3 (else=sysmis). 
+Define DPView()
+!do !i = 1 !to 4
+      If(!concat(Refield)= 0) !concat(DPViewA_M,!i) = !concat(DPViewA,.,!i).
+      If(!concat(Refield)= 1) !concat(DPViewA_M,!i) = !concat(DPViewA_R,.,!i).
+!doend
+!EndDefine.
+DPView.
+exe.
+
+RECODE DPViewB_M1 to DPViewB_M3 (else=0).
+IF ((DPViewA_M1 = 1 | DPViewA_M3 = 1)) DPViewB_M1 = 1.
+IF ((DPViewA_M2 = 1)) DPViewB_M2 = 1.
+IF ((DPViewA_M4 = 1)) DPViewB_M3 = 1.
+freq DPViewA_M1 to DPViewA_M4.
+freq DPViewB_M1 to DPViewB_M3.
+var labels 
+DPViewA_M1 "Theatrical only"
+DPViewA_M2 "Home Entertainment only"
+DPViewA_M3 "Theatrical and Home Entertainment"
+DPViewA_M4 "Non-viewer"
+DPViewB_M1 "Theatrical viewer"
+DPViewB_M2 "Home Entertainment only viewer"
+DPViewB_M3 "Non-viewer".
+
+MRSETS
+  /MDGROUP NAME=$DPViewA_M LABEL='DEADPOOL VIEWERSHIP (Refield Merge)' CATEGORYLABELS=VARLABELS VARIABLES=DPViewA_M1 DPViewA_M2 DPViewA_M3 DPViewA_M4 VALUE=1
+  /MDGROUP NAME=$DPView_M LABEL='DEADPOOL VIEWERSHIP (Refield Merge)' CATEGORYLABELS=VARLABELS VARIABLES=DPViewB_M1 DPViewB_M2 DPViewB_M3 VALUE=1
+  /MDGROUP NAME=$DPViewA_R LABEL='DEADPOOL VIEWERSHIP (Refield)' CATEGORYLABELS=VARLABELS VARIABLES=DPViewA_R.1 DPViewA_R.2 DPViewA_R.3 DPViewA_R.4 VALUE=1
+  /DISPLAY NAME=[$DPViewA_M $DPView_M $DPViewA_R].
+
+Define DeadOwn()
+!do !i = 1 !to 4
+      If(!concat(Refield)= 0) !concat(DeadOwn_M,!i) = !concat(DeadOwn,.,!i).
+      If(!concat(Refield)= 1) !concat(DeadOwn_M,!i) = !concat(DeadOwn_R,.,!i).
+!doend
+!EndDefine.
+DeadOwn.
+EXECUTE.
+var labels DeadOwn_M1 "DVD" DeadOwn_M2 "Blu-ray disc" DeadOwn_M3 "Digital download (e.g. via iTunes)"
+DeadOwn_M4 "None of the above".
+
+freq DPViewB1_R.
+
+SAVE OUTFILE='K:\Deadpool 2\Brand and Sequel Study\Wave 1\Data\Deadpool Gen & RF US.sav' 
+  /COMPRESSED.
+
+DATASET ACTIVATE DataSet2.
+* Define Multiple Response Sets.
+MRSETS
+  /MDGROUP NAME=$DeadOwn_R LABEL='On which, if any, of the following formats do you own the '+
+    'DEADPOOL movie? (Refield)' CATEGORYLABELS=VARLABELS VARIABLES=DeadOwn_R.1 DeadOwn_R.2 
+    DeadOwn_R.3 DeadOwn_R.4 VALUE=1
+  /MDGROUP NAME=$DeadOwn_M LABEL='On which, if any, of the following formats do you own the '+
+    'first DEADPOOL movie? Please select all that apply. (Refield Merge)' CATEGORYLABELS=VARLABELS 
+    VARIABLES=DeadOwn_M1 DeadOwn_M2 DeadOwn_M3 DeadOwn_M4 VALUE=1
+  /DISPLAY NAME=[$DeadOwn_R $DeadOwn_M].
+
+
+
+
+
+Define OwnM()
+!do !i = 1 !to 24
+      If(!concat(Refield)= 0) !concat(Own_M,!i) = !concat(Own,.,!i).
+      If(!concat(Refield)= 1) !concat(Own_M,!i) = !concat(Own_R,.,!i).
+  !doend
+!EndDefine.
+OwnM.
+exe.
+
+      If (Refield= 0) Own_M99 = Own.99.
+      If (Refield= 1) Own_M99 = Own_R.99.
+      If (Refield= 0) Own_M999 = Own.100.
+      If (Refield= 1) Own_M999 = Own_R.999.
+
+
+Var Labels
+Own_M1 "DEADPOOL (2016)"
+Own_M2 "THE AVENGERS (2012)"
+Own_M3 "AVENGERS: AGE OF ULTRON (2015)"
+Own_M4 "CAPTAIN AMERICA: THE FIRST AVENGER (2011)"
+Own_M5 "CAPTAIN AMERICA: THE WINTER SOLDIER (2014)"
+Own_M6 "CAPTAIN AMERICA: CIVIL WAR (2016)"
+Own_M7 "IRON MAN (2008)"
+Own_M8 "IRON MAN 2 (2010)"
+Own_M9 "IRON MAN 3 (2013)"
+Own_M10 "THE AMAZING SPIDER-MAN (2012)"
+Own_M11 "THE AMAZING SPIDER-MAN 2 (2014)"
+Own_M12 "SPIDER-MAN HOMECOMING (2017)"
+Own_M13 "X-MEN (2000)"
+Own_M14 "X2 (2003)"
+Own_M15 "X-MEN: THE LAST STAND (2006)"
+Own_M16 "X-MEN ORIGINS: WOLVERINE (2009)"
+Own_M17 "X-MEN: FIRST CLASS (2011)"
+Own_M18 "THE WOLVERINE (2013)"
+Own_M19 "X-MEN: DAYS OF FUTURE PAST (2014)"
+Own_M20 "X-MEN: APOCALYPSE (2016)"
+Own_M21 "LOGAN (2017)"
+Own_M22 "GUARDIANS OF THE GALAXY (2014)"
+Own_M23 "GUARDIANS OF THE GALAXY VOL 2 (2017)"
+Own_M24 "SUICIDE SQUAD (2016)"
+Own_M99 "READY PLAYER ONE (2018)"
+Own_M999 "None of the above".
+
+
+MRSETS
+  /MDGROUP NAME=$Own_R LABEL='Which, if any, of the following movies do you own (either on DVD, '+
+    'Blu-Ray or a download version like iTunes)? (Refield)' CATEGORYLABELS=VARLABELS 
+    VARIABLES=Own_R.1 Own_R.2 Own_R.3 Own_R.4 Own_R.5 Own_R.6 Own_R.7 Own_R.8 Own_R.9 Own_R.10 Own_R.11 
+    Own_R.12 Own_R.13 Own_R.14 Own_R.15 Own_R.16 Own_R.17 Own_R.18 Own_R.19 Own_R.20 Own_R.21 Own_R.22 
+    Own_R.23 Own_R.24 Own_R.99 Own_R.999 VALUE=1
+  /MDGROUP NAME=$Own_M LABEL='Which, if any, of the following movies do you own (either on DVD, '+
+    'Blu-Ray or a download version like iTunes)? (Refield Merge)' CATEGORYLABELS=VARLABELS 
+    VARIABLES=Own_M1 Own_M2 Own_M3 Own_M4 Own_M5 Own_M6 Own_M7 Own_M8 Own_M9 Own_M10 Own_M11 Own_M12 
+    Own_M13 Own_M14 Own_M15 Own_M16 Own_M17 Own_M18 Own_M19 Own_M20 Own_M21 Own_M22 Own_M23 Own_M24 
+   Own_M99 Own_M999
+    VALUE=1
+  /DISPLAY NAME=[$Own_R $Own_M].
+
+freq Own_M1 to Own_M24.
+ 
+IF (DPViewA_M1 = 1) ViewA_M = 1.
+IF (DPViewA_M2 = 1) ViewA_M = 2.
+IF (DPViewA_M3 = 1) ViewA_M = 3.
+IF (DPViewA_M4 = 1) ViewA_M = 4.
+IF (DPViewA_M1 = 1 | DPViewA_M3 = 1) ViewC_M = 1.
+IF (DPViewA_M2) ViewC_M = 2.
+IF (DPViewA_M4) ViewC_M = 3.
+IF (SeenM1.1 = 1 | SeenM1.2 = 1) ViewD_M = 1.
+IF (SeenM1.3 = 1 | SeenM1.4 = 1) ViewD_M = 2.
+RECODE Own_M1 (1=1)(else=2) INTO OwnDP_M.
+val labels ViewA_M 1 "Theatrical only" 2"HE only" 3"Theatrical and HE" 4"Non-viewer"
+/ViewC_M 1 "Theatrical" 2 "HE only" 3 "Non-viewer"
+/ViewD_M 1 "Seen" 2 "Not seen"
+/OwnDP_M 1 "Owner" 2 "Non-owner".
+var labels ViewA_M "Deadpool Viewer Type"
+ViewC_M "Deadpool Viewer Type"
+ViewD_M "Deadpool Seen"
+OwnDP_M "Deadpool HE Ownership".
+
+exe.
+
+freq ViewA_M to ViewC_M.
