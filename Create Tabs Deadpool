@@ -790,7 +790,7 @@ For C = CStart to CEnd
 				
 			QRE[1] = "MaxDiff"
 			Ttl[1] = "MaxDiff Scores"
-			Var[1] = "MaxDiff1"'{base() [IsHidden=TRUE], unweightedbase() [IsHidden=True], ..}"
+			Var[1] = "MaxDiff1{base('Overall=1'), unweightedbase() [IsHidden = True], em1 'VULGAR HUMOR' mean(Rescaled1)[Decimals=4], em2 'PHYSICAL HUMOR' mean(Rescaled2)[Decimals=4], em3 'VERBAL HUMOR' mean(Rescaled3)[Decimals=4], em4 'POP CULTURE' mean(Rescaled4)[Decimals=4], em5 'RANDOM HUMOR' mean(Rescaled5)[Decimals=4], em6 'FOURTH WALL' mean(Rescaled6)[Decimals=4], em7 'POWERS' mean(Rescaled7)[Decimals=4], em8 'SPECTACLE' mean(Rescaled8)[Decimals=4], em9 'NEW CHARACTERS' mean(Rescaled9)[Decimals=4], em10 'WADE' mean(Rescaled10)[Decimals=4], em11 'SOFT' mean(Rescaled11)[Decimals=4], em12 'VIOLENCE' mean(Rescaled12)[Decimals=4]}"
 			Amg[1] = "All"
 				MakeTab(var[1], Banner, Amg[1], QRE[1], Ttl[1], TableDoc, 0, "first", 0, "None")
 			Ttl[1] = "MaxDiff Scores"
